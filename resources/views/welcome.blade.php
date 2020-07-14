@@ -149,11 +149,7 @@
               ?>
             </h1>
             <div class="">
-              Updated:
-              <?php
-              echo $title_and_menu["updated"];
-              ?>
-              (webhooks: <span id="feedback_box">0</span>)
+              Synced: <?php echo $title_and_menu["updated"];?> (syncing threads: <span id="feedback_box">0</span>)
             </div>
 
             <script type="text/javascript">

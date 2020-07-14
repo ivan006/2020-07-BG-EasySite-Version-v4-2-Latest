@@ -43,33 +43,37 @@ class update extends Model
   }
 
   public function processing($update_object, $dropbox_utility_object){
-    // if processing process
-    // else if pending initialise
-    // else return
 
     // $timestamp = date('Y-m-d h:i:s a', time());
-    // file_put_contents(
-    //   "updates_processing_log.txt",
-    //   $timestamp
-    // );
 
-    $processing_helper = $update_object->processing_helper($update_object, $dropbox_utility_object);
-    $processing_helper_json = json_encode($processing_helper, JSON_PRETTY_PRINT);
+    $updates_processing_log = $dropbox_utility_object->file_get_utf8("updates_processing_log.txt");
+    $updates_pending_log = $dropbox_utility_object->file_get_utf8("updates_pending_log.txt");
 
-    file_put_contents(
-      "updates_processing_log.txt",
-      $processing_helper_json
-    );
+    if ($updates_processing_log !== "no") {
 
+      $update_object->add_to_completed($update_object, $dropbox_utility_object, $updates_processing_log);
 
-    return $processing_helper;
+    } elseif ($updates_pending_log !== "no") {
+
+      $add_to_processing = $update_object->add_to_processing($update_object, $dropbox_utility_object);
+      $add_to_processing_json = json_encode($add_to_processing, JSON_PRETTY_PRINT);
+
+      file_put_contents(
+        "updates_processing_log.txt",
+        $add_to_processing_json
+      );
+      file_put_contents("updates_pending_log.txt", "no");
+
+    }
+
+    // return $add_to_processing;
 
     // $updates_processing_log = $dropbox_utility_object->file_get_utf8("updates_pending_log.txt");
     // // $updates_processing_log = json_decode($updates_processing_log, true);
 
   }
 
-  public function processing_helper($update_object, $dropbox_utility_object){
+  public function add_to_processing($update_object, $dropbox_utility_object){
 
     // $dropbox_utility_object = new dropbox_utility;
     $completed = $dropbox_utility_object->file_get_utf8("updates_completed_log.txt");
@@ -124,7 +128,7 @@ class update extends Model
   public function all_level_2($update_object, $dropbox_utility_object){
 
     $all_level_1 = $update_object->all_level_1($update_object, $dropbox_utility_object);
-    
+
     $result = $update_object->all_level_2_helper($all_level_1, $update_object);
 
     return $result;
@@ -147,6 +151,28 @@ class update extends Model
       }
     }
     return $result;
+  }
+
+  public function add_to_completed($update_object, $dropbox_utility_object, $updates_processing_log){
+    // file_put_contents(
+    //   "updates_completed_log.txt",
+    //   $add_to_processing_json
+    // );
+    // file_put_contents("updates_processing_log.txt", "no");
+
+    $pub_store = storage_path()."/app/public/";
+    $files = scandir($pub_store);
+
+    // dd($pub_store);
+
+    foreach ($updates_processing_log["remove"] as $key => $value) {
+
+    }
+
+    foreach ($updates_processing_log["add"] as $key => $value) {
+
+    }
+
   }
 
 }

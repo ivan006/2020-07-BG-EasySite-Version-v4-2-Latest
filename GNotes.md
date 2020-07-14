@@ -274,3 +274,5 @@ google: VerifyCsrfToken  disable for route laravel
 https://stackoverflow.com/questions/31223189/in-laravel-5-how-to-disable-verifycsrftoken-middleware-for-specific-route
 https://stackoverflow.com/questions/31729415/disable-csrf-in-laravel-for-specific-route
 google: VerifyCsrfToken  except group
+
+https://stackoverflow.com/questions/5687600/jquery-call-ajax-every-10-seconds

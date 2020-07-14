@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\dropbox_utility;
 
 class report extends Model
 {
@@ -342,21 +343,19 @@ class report extends Model
 
   public function title_and_menu($report_object, $data_items, $GET){
 
-    // $current_link = $report_object->get_var_to_link_utils($GET)["current_link"];
+    $result = array();
+    $first_elements_key = $report_object->first_elements_key($data_items);
+    $first_element_value = $data_items[$first_elements_key];
+
+    $title = $report_object->report_suffix_remove($first_elements_key);
+
+
+    $menu_items = array();
 
     $get_popped = $GET;
     array_pop($get_popped);
     $back_link = $report_object->get_var_to_link_utils($get_popped)["current_link"];
-
-    $first_elements_key = $report_object->first_elements_key($data_items);
-
-    $first_element_value = $data_items[$first_elements_key];
-    // dd($first_element_value["content"]);
-    $result = array(
-      "title" => $report_object->report_suffix_remove($first_elements_key),
-      "menu_items" => array()
-    );
-    $result["menu_items"]["Back"] = $back_link;
+    $menu_items["Back"] = $back_link;
 
     foreach ($first_element_value["content"] as $key => $value) {
       if (is_array($value)) {
@@ -370,10 +369,25 @@ class report extends Model
 
           $link = $current_link.$slug_sep.$slug_id."=".$key;
           $name = $report_object->report_suffix_remove($key);
-          $result["menu_items"][$name] = $link;
+          $menu_items[$name] = $link;
         }
       }
     }
+
+    $dropbox_utility = new dropbox_utility;
+    $updated = "";
+    $updates_processing_log = $dropbox_utility->file_get_utf8("updates_pending_log.txt");
+    if ($updates_processing_log == "yes") {
+      $updated = "No";
+    } elseif ($updates_processing_log == "no") {
+      $updated = "Yes";
+    }
+
+    $result = array(
+      "title" => $title,
+      "menu_items" => $menu_items,
+      "updated" => $updated,
+    );
     return $result;
   }
 

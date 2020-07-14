@@ -4,7 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title><?php if (isset($title)) { echo $title; } ?></title>
+  <title>
+    <?php
+    if (isset($title_and_menu["title"])) {
+      echo $title_and_menu["title"];
+    }
+    ?>
+  </title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -142,7 +148,9 @@
               ?>
             </h1>
             <div class="">
+              Updated: 
               <?php
+              echo $title_and_menu["updated"];
               ?>
             </div>
             <hr>
@@ -174,7 +182,7 @@
                 ?>
               </div>
               <hr>
-              <?php echo $result ?>
+              <?php echo $body ?>
             </div>
           </div>
         </div>

@@ -30,6 +30,6 @@ Route::get('/home', ['middleware' => ['auth'],'uses' => 'report_c@edit'])->name(
 
 
 
-Route::get('/dropbox', "update_c@state");
-Route::any('/update_cache', "update_c@update_updates_pending_log");
-// https://red.bluegemify.co.za/update_updates_pending_log?test=123
+Route::get('/processing', "update_c@processing");
+Route::any('/pending', "update_c@pending");
+// https://red.bluegemify.co.za/pending?test=123

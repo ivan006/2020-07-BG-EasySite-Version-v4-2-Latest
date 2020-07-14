@@ -14,28 +14,23 @@ class update_c extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function state()
+    public function processing()
     {
       $update_object = new update;
-      // $state = $update_object->state_raw();
-      // dd($state);
-
 
       $diff_level_1 = $update_object->diff_level_1($update_object);
       $diff_level_2 = $update_object->diff_level_2($update_object);
 
-      // $var1 = json_encode($var1, JSON_PRETTY_PRINT);
+      // $all2 = $update_object->all($update_object);
 
-      $state2 = $update_object->state($update_object);
-
-      return view('welcome', compact("diff_level_2", "diff_level_1"));
+      return view('test', compact("diff_level_2", "diff_level_1"));
     }
 
-    public function update_updates_pending_log()
+    public function pending()
     {
       $update_object = new update;
       $var1 = 1;
-      $var2 = $update_object->update_updates_pending_log();
+      $var2 = $update_object->pending();
       // $var2 = json_encode($var2, JSON_PRETTY_PRINT);
       return $var2;
     }

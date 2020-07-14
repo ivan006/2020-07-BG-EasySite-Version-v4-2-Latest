@@ -43,6 +43,11 @@ class update extends Model
   }
 
   public function processing($update_object, $dropbox_utility_object){
+    // if processing add to completed
+    // else if pending add to processing
+    // else return
+
+
     $diff_level_1 = $update_object->diff_level_1($update_object, $dropbox_utility_object);
     $diff_level_1_json = json_encode($diff_level_1, JSON_PRETTY_PRINT);
     // $diff_level_2 = $update_object->diff_level_2($update_object, $dropbox_utility_object);

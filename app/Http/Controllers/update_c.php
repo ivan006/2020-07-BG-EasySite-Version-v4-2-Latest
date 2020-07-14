@@ -23,7 +23,7 @@ class update_c extends Controller
 
       $result = $update_object->processing($update_object, $dropbox_utility_object);
 
-      return view('test', compact("result"));
+      return $result;
     }
 
     public function pending()

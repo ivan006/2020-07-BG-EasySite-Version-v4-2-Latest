@@ -43,32 +43,48 @@ class update extends Model
   }
 
   public function processing($update_object, $dropbox_utility_object){
-    // if processing add to completed
-    // else if pending add to processing
+    // if processing process
+    // else if pending initialise
     // else return
 
-
-    $diff_level_1 = $update_object->diff_level_1($update_object, $dropbox_utility_object);
-    $diff_level_1_json = json_encode($diff_level_1, JSON_PRETTY_PRINT);
-    // $diff_level_2 = $update_object->diff_level_2($update_object, $dropbox_utility_object);
-
-    // $all2 = $update_object->all($update_object);
-
     // $timestamp = date('Y-m-d h:i:s a', time());
+    // file_put_contents(
+    //   "updates_processing_log.txt",
+    //   $timestamp
+    // );
+
+    $processing_helper = $update_object->processing_helper($update_object, $dropbox_utility_object);
+    $processing_helper_json = json_encode($processing_helper, JSON_PRETTY_PRINT);
+
     file_put_contents(
       "updates_processing_log.txt",
-      $diff_level_1_json
+      $processing_helper_json
     );
 
 
+    return $processing_helper;
 
-    return $diff_level_1;
-
-
-    $updates_processing_log = $dropbox_utility_object->file_get_utf8("updates_pending_log.txt");
-    // $updates_processing_log = json_decode($updates_processing_log, true);
+    // $updates_processing_log = $dropbox_utility_object->file_get_utf8("updates_pending_log.txt");
+    // // $updates_processing_log = json_decode($updates_processing_log, true);
 
   }
+
+  public function processing_helper($update_object, $dropbox_utility_object){
+
+    // $dropbox_utility_object = new dropbox_utility;
+    $completed = $dropbox_utility_object->file_get_utf8("updates_completed_log.txt");
+    $completed = json_decode($completed, true);
+
+
+    // $all_level_2 = $update_object->all_level_1($update_object, $dropbox_utility_object);
+    $all_level_2 = $update_object->all_level_2($update_object, $dropbox_utility_object);
+
+    $result["remove"] = array_diff_assoc($completed, $all_level_2);
+    $result["add"] = array_diff_assoc($all_level_2, $completed);
+
+    return $result;
+  }
+
 
   public function all_level_1($update_object, $dropbox_utility_object){
 
@@ -108,6 +124,7 @@ class update extends Model
   public function all_level_2($update_object, $dropbox_utility_object){
 
     $all_level_1 = $update_object->all_level_1($update_object, $dropbox_utility_object);
+    
     $result = $update_object->all_level_2_helper($all_level_1, $update_object);
 
     return $result;
@@ -129,57 +146,6 @@ class update extends Model
         }
       }
     }
-    return $result;
-  }
-
-  public function diff_level_1($update_object, $dropbox_utility_object){
-
-    // $dropbox_utility_object = new dropbox_utility;
-    $old_all_level_2 = $dropbox_utility_object->file_get_utf8("updates_completed_log.txt");
-    $old_all_level_2 = json_decode($old_all_level_2, true);
-
-
-    $all_level_2 = $update_object->all_level_1($update_object, $dropbox_utility_object);
-    $all_level_2 = $update_object->all_level_2_helper($all_level_2, $update_object);
-
-    $result["remove"] = array_diff_assoc($old_all_level_2, $all_level_2);
-    $result["add"] = array_diff_assoc($all_level_2, $old_all_level_2);
-
-    return $result;
-  }
-
-  public function diff_level_2($update_object, $dropbox_utility_object){
-
-    $diff_level_1 = $update_object->diff_level_1($update_object, $dropbox_utility_object);
-
-    $result["remove"] = $update_object->diff_level_2_helper("remove",$diff_level_1);
-    $result["add"] = $update_object->diff_level_2_helper("add",$diff_level_1);
-
-    // $result["remove"] = array_diff_assoc($old_all_level_2, $all_level_2);
-    // $result["add"] = array_diff_assoc($all_level_2, $old_all_level_2);
-
-    return $result;
-  }
-
-  public function diff_level_2_helper($array_name,$diff_level_1){
-
-    $folder_to_remove = array();
-    foreach ($diff_level_1[$array_name] as $key => $value) {
-      if ($value == 0) {
-        $folder_to_remove[$key] = $value;
-      }
-    }
-    $result = $folder_to_remove;
-    foreach ($diff_level_1[$array_name] as $key => $value) {
-      if ($value !== 0) {
-        foreach ($folder_to_remove as $key2 => $value2) {
-          if (substr($key, 0, strlen($key2)) !== $key2) {
-            $result[$key] = $value;
-          }
-        }
-      }
-    }
-
     return $result;
   }
 

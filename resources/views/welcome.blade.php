@@ -117,6 +117,7 @@
     .BoSi_BoBo {box-sizing: border-box;}
   </style>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body class="bg-light">
 
@@ -148,11 +149,30 @@
               ?>
             </h1>
             <div class="">
-              Updated: 
+              Updated:
               <?php
               echo $title_and_menu["updated"];
               ?>
+              (webhooks: <span id="feedback_box">0</span>)
             </div>
+
+            <script type="text/javascript">
+            function fetchdata(){
+              $.ajax({
+                url: '/processing',
+                type: 'get',
+                success: function(response){
+                  var thread_count = $('#feedback_box').text();
+                  $('#feedback_box').text(parseFloat(thread_count)+1);
+
+                }
+              });
+            }
+
+            $(document).ready(function(){
+              setInterval(fetchdata,5000);
+            });
+            </script>
             <hr>
 
             <div class="row">
@@ -186,5 +206,6 @@
             </div>
           </div>
         </div>
+
       </body>
       </html>

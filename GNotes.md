@@ -276,3 +276,16 @@ https://stackoverflow.com/questions/31729415/disable-csrf-in-laravel-for-specifi
 google: VerifyCsrfToken  except group
 
 https://stackoverflow.com/questions/5687600/jquery-call-ajax-every-10-seconds
+google: ajax call every 5 seconds jquery
+https://stackoverflow.com/questions/25446628/ajax-jquery-refresh-div-every-5-seconds/25446696
+https://stackoverflow.com/questions/5687600/jquery-call-ajax-every-10-seconds
+
+// useful start
+https://makitweb.com/how-to-fire-ajax-request-on-regular-interval/
+// useful end
+https://www.w3schools.com/jquery/jquery_get_started.asp
+google: get value of div jquery
+https://stackoverflow.com/questions/1827659/get-a-div-value-in-jquery
+https://stackoverflow.com/questions/1570905/use-jquery-to-set-value-of-div-tag
+https://stackoverflow.com/questions/6552959/sum-of-two-input-value-by-jquery
+https://stackoverflow.com/questions/13953939/how-to-force-addition-instead-of-concatenation-in-javascript

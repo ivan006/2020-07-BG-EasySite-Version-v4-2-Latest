@@ -19,7 +19,7 @@ class update extends Model
       $signal_status = "signal_test_passed";
 
       $result = $_GET['challenge'];
-      $timestamp = date('Y-m-d h:i:s a', time());
+      // $timestamp = date('Y-m-d h:i:s a', time());
       // file_put_contents(
       //   $pending_log,
       //   "ready"." ".$timestamp

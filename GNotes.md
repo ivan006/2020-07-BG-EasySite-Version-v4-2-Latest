@@ -270,3 +270,7 @@ https://medium.com/@tik/how-to-create-and-monitor-scheduled-tasks-in-laravel-app
 https://tutsforweb.com/how-to-set-up-task-scheduling-cron-job-in-laravel/
 // useful end
 https://laravel.com/docs/7.x/scheduling
+google: VerifyCsrfToken  disable for route laravel
+https://stackoverflow.com/questions/31223189/in-laravel-5-how-to-disable-verifycsrftoken-middleware-for-specific-route
+https://stackoverflow.com/questions/31729415/disable-csrf-in-laravel-for-specific-route
+google: VerifyCsrfToken  except group

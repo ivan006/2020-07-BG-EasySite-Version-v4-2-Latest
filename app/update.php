@@ -9,24 +9,37 @@ class update extends Model
 {
   public function pending(){
     $update_object = new update;
-    $file_name = "updates_pending_log.txt";
+    $dropbox_utility = new dropbox_utility;
+
+    $pending_log = "updates_pending_log.txt";
+
+    $signal_status = "";
 
     if (isset($_GET['challenge'])) {
+      $signal_status = "signal_test_passed";
+
       $result = $_GET['challenge'];
-
       $timestamp = date('Y-m-d h:i:s a', time());
-      file_put_contents(
-        $file_name,
-        "ready"." ".$timestamp
-      );
-
+      // file_put_contents(
+      //   $pending_log,
+      //   "ready"." ".$timestamp
+      // );
+      file_put_contents($pending_log, "yes");
       return $result;
+
     } elseif ($dropbox_utility->authenticate() == 1) {
-      file_put_contents($file_name, "yes");
+      $signal_status = "signal_security_passed";
+
+      file_put_contents($pending_log, "yes");
+
     } else {
+      $signal_status = "signal_security_failed";
+
       header('HTTP/1.0 403 Forbidden');
-      file_put_contents($file_name, "not_ready");
+      // file_put_contents($pending_log, "not_ready");
+
     }
+
   }
 
   public function processing(){

@@ -32,4 +32,4 @@ Route::get('/home', ['middleware' => ['auth'],'uses' => 'report_c@edit'])->name(
 
 Route::get('/processing', "update_c@processing");
 Route::any('/pending', "update_c@pending");
-// https://red.bluegemify.co.za/pending?test=123
+// https://red.bluegemify.co.za/pending?challenge=123

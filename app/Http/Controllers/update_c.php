@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Datatables;
 use App\update;
+use App\dropbox_utility;
 
 class update_c extends Controller
 {
@@ -18,12 +19,11 @@ class update_c extends Controller
     {
       $update_object = new update;
 
-      $diff_level_1 = $update_object->diff_level_1($update_object);
-      $diff_level_2 = $update_object->diff_level_2($update_object);
+      $dropbox_utility_object = new dropbox_utility;
 
-      // $all2 = $update_object->all($update_object);
+      $result = $update_object->processing($update_object, $dropbox_utility_object);
 
-      return view('test', compact("diff_level_2", "diff_level_1"));
+      return view('test', compact("result"));
     }
 
     public function pending()

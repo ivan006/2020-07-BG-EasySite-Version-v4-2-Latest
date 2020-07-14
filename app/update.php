@@ -27,7 +27,7 @@ class update extends Model
       file_put_contents($pending_log, "yes");
       return $result;
 
-    } elseif ($dropbox_utility->authenticate() == 1) {
+    } elseif ($dropbox_utility_object->authenticate() == 1) {
       $signal_status = "signal_security_passed";
 
       file_put_contents($pending_log, "yes");
@@ -42,34 +42,42 @@ class update extends Model
 
   }
 
-  public function processing(){
-    $update_object = new update;
+  public function processing($update_object, $dropbox_utility_object){
+    $diff_level_1 = $update_object->diff_level_1($update_object, $dropbox_utility_object);
+    $diff_level_1_json = json_encode($diff_level_1, JSON_PRETTY_PRINT);
+    // $diff_level_2 = $update_object->diff_level_2($update_object, $dropbox_utility_object);
 
-    $updates_processing_log = $dropbox_utility->file_get_utf8("updates_pending_log.txt");
-    // $updates_processing_log = json_decode($updates_processing_log, true);
+    // $all2 = $update_object->all($update_object);
 
-    $timestamp = date('Y-m-d h:i:s a', time());
+    // $timestamp = date('Y-m-d h:i:s a', time());
     file_put_contents(
       "updates_processing_log.txt",
-      $updates_processing_log." ".$timestamp
+      $diff_level_1_json
     );
 
 
+
+    return $diff_level_1;
+
+
+    $updates_processing_log = $dropbox_utility_object->file_get_utf8("updates_pending_log.txt");
+    // $updates_processing_log = json_decode($updates_processing_log, true);
+
   }
 
-  public function all_level_1(){
-    $update_object = new update;
+  public function all_level_1($update_object, $dropbox_utility_object){
+
     $path = "";
 
-    $result = $update_object->all_level_1_helper($path, "", $update_object);
+    $result = $update_object->all_level_1_helper($path, "", $update_object, $dropbox_utility_object);
 
 
     return $result;
   }
 
-  public function all_level_1_helper($path, $called, $update_object){
-    $dropbox_utility = new dropbox_utility;
-    $result = $dropbox_utility->get_from_dropbox($path, $update_object, "files/list_folder");
+  public function all_level_1_helper($path, $called, $update_object, $dropbox_utility_object){
+
+    $result = $dropbox_utility_object->get_from_dropbox($path, $update_object, "files/list_folder");
 
 
     if (isset($result["entries"])) {
@@ -81,7 +89,7 @@ class update extends Model
         foreach ($result as $key => $entry) {
 
           if ($entry['.tag'] == "folder") {
-            $sub_result = $update_object->all_level_1_helper($entry['path_display'], $called, $update_object);
+            $sub_result = $update_object->all_level_1_helper($entry['path_display'], $called, $update_object, $dropbox_utility_object);
             $result[$key]["child_content"] = $sub_result;
           } else {
             $result[$key]["child_content"] = "";
@@ -92,9 +100,9 @@ class update extends Model
     return $result;
   }
 
-  public function all_level_2($update_object){
+  public function all_level_2($update_object, $dropbox_utility_object){
 
-    $all_level_1 = $update_object->all_level_1();
+    $all_level_1 = $update_object->all_level_1($update_object, $dropbox_utility_object);
     $result = $update_object->all_level_2_helper($all_level_1, $update_object);
 
     return $result;
@@ -119,14 +127,14 @@ class update extends Model
     return $result;
   }
 
-  public function diff_level_1($update_object){
+  public function diff_level_1($update_object, $dropbox_utility_object){
 
-    $dropbox_utility = new dropbox_utility;
-    $old_all_level_2 = $dropbox_utility->file_get_utf8("updates_completed_log.txt");
+    // $dropbox_utility_object = new dropbox_utility;
+    $old_all_level_2 = $dropbox_utility_object->file_get_utf8("updates_completed_log.txt");
     $old_all_level_2 = json_decode($old_all_level_2, true);
 
 
-    $all_level_2 = $update_object->all_level_1();
+    $all_level_2 = $update_object->all_level_1($update_object, $dropbox_utility_object);
     $all_level_2 = $update_object->all_level_2_helper($all_level_2, $update_object);
 
     $result["remove"] = array_diff_assoc($old_all_level_2, $all_level_2);
@@ -135,9 +143,9 @@ class update extends Model
     return $result;
   }
 
-  public function diff_level_2($update_object){
+  public function diff_level_2($update_object, $dropbox_utility_object){
 
-    $diff_level_1 = $update_object->diff_level_1($update_object);
+    $diff_level_1 = $update_object->diff_level_1($update_object, $dropbox_utility_object);
 
     $result["remove"] = $update_object->diff_level_2_helper("remove",$diff_level_1);
     $result["add"] = $update_object->diff_level_2_helper("add",$diff_level_1);

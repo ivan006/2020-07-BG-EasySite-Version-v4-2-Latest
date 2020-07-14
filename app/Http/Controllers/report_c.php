@@ -10,21 +10,24 @@ class report_c extends Controller
 {
   public static function show() {
     $report_object = new report;
+    $GET = $_GET;
 
+    // $result = $report_object->show($GET);
 
-    $result = $report_object->show($_GET);
+    $data_items = $report_object->show_array($report_object, $GET);
 
-    $data_items = $report_object->show_array($_GET);
+    $title_and_menu = $report_object->title_and_menu($report_object, $data_items, $GET);
+    $result = $report_object->show_html($report_object, $data_items, $GET);
+
 
     $title = "";
-
     if (!empty($data_items)) {
       reset($data_items);
       $title = key($data_items);
-      $title = $report_object->ends_with($title, "_report");
+      $title = $report_object->report_suffix_remove($title);
     }
 
-    return view('welcome', compact('result','title'));
+    return view('welcome', compact('result','title','title_and_menu'));
 
   }
 

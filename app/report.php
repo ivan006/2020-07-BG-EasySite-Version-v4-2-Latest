@@ -6,19 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class report extends Model
 {
-  public static function show($GET) {
+  // public static function show($GET) {
+  //   $report_object = new report;
+  //
+  //   // dd($array);
+  //   $html = $report_object->show_html();
+  //   return $html;
+  // }
+
+  public function show_html($report_object, $data_items, $GET) {
+
     $report_object = new report;
 
-    // dd($array);
-    $html = $report_object->show_html();
-    return $html;
-  }
-
-  public function show_html() {
-
-    $report_object = new report;
-
-    $data_items = $report_object->show_array($_GET);
+    // $data_items = $report_object->show_array($_GET);
 
     // echo "<pre>";
     // $data_items = json_encode($data_items, JSON_PRETTY_PRINT);
@@ -27,99 +27,19 @@ class report extends Model
     // dd($data_items);
 
     if (!empty($data_items)) {
-      reset($data_items);
-      $data_items_0 = key($data_items);
 
-      $GET = $_GET;
-      array_pop($GET);
 
-      $link = "";
-      $separator = "?";
-      $i = 1;
-      foreach ($GET as $key => $value) {
-        // echo $key."zzz";
-        $link = $link.$separator.$i."=".$value;
-        if ($key > 0) {
-          $separator = "&";
-        }
-        $i = $i+1;
-      }
+      $first_elements_key = $report_object->first_elements_key($data_items);
+
+      $get_popped = $GET;
+      array_pop($get_popped);
+
+      $link = $report_object->get_var_to_link_utils($get_popped)["current_link"];
+
 
       ob_start();
       ?>
-      <h1 class="my-3">
-        <?php echo $report_object->ends_with($data_items_0, "_report") ?>
-      </h1>
 
-      <hr>
-
-      <div class="row">
-        <div class="col-md-3">
-          <!-- <table  class="rounded border border-secondary w-100" style="border-collapse: separate;"> -->
-          <table  class="p-2 rounded w-100" style="border-collapse: separate;">
-            <tr>
-              <td class="p-2">
-                <b>
-
-                  <a href="/<?php echo $link ?>">Back</a>
-                </b>
-              </td>
-
-            </tr>
-          </table>
-
-        </div>
-      <?php
-      foreach ($data_items[$data_items_0]["content"] as $data_item_key => $data_item_value) {
-        // echo $data_item_key;
-        // echo "<br>";
-        if (is_array($data_item_value)) {
-          if ($report_object->ends_with($data_item_key, "_report") == null) {
-          } else {
-
-
-            $GET = $_GET;
-
-            $link = "";
-            $separator = "?";
-            $i = 1;
-            foreach ($GET as $key => $value) {
-              // echo $key."zzz";
-              $link = $link.$separator.$i."=".$value;
-              if ($key > 0) {
-                $separator = "&";
-              }
-              $i = $i+1;
-            }
-
-            $link = $link.$separator.$i."=".$data_item_key;
-            ?>
-
-              <div class="col-md-3">
-                <!-- <table  class="rounded border border-secondary w-100" style="border-collapse: separate;"> -->
-                <table  class="p-2 rounded w-100" style="border-collapse: separate;">
-                  <tr>
-                    <td class="p-2 ">
-                      <b>
-                        <a href="/<?php echo $link ?>">
-                          <?php echo $report_object->ends_with($data_item_key, "_report") ?>
-                        </a>
-                      </b>
-                    </td>
-
-                  </tr>
-                </table>
-
-              </div>
-            <?php
-
-          }
-
-        }
-      }
-      ?>
-      </div>
-      <hr>
 
       <?php
 
@@ -129,7 +49,7 @@ class report extends Model
 
       $reportdata_html = "";
 
-      $data_items_0_items = $data_items[$data_items_0];
+      $data_items_0_items = $data_items[$first_elements_key];
 
       $reportdata_html =  $reportdata_html . $report_object->show_html_helper($data_items_0_items["content"],1,0);
 
@@ -170,7 +90,7 @@ class report extends Model
       // echo "<br>";
 
       if (is_array($data_item_value["content"])) {
-        if ($report_object->ends_with($data_item_key, "_report") == null) {
+        if ($report_object->report_suffix_exists($data_item_key) == 0) {
 
 
           // reset($data_item_value["content"]);
@@ -297,11 +217,11 @@ class report extends Model
   }
 
   // public static function show($ShowID) {
-  public static function show_array($GET) {
+  public static function show_array($report_object, $GET) {
 
     if(!function_exists('App\ShowHelper')){
-      function ShowHelper($ShowLocation) {
-        $report_object = new report;
+      function ShowHelper($report_object, $ShowLocation) {
+        // $report_object = new report;
         $result = array();
         $shallowList = scandir($ShowLocation);
 
@@ -314,9 +234,9 @@ class report extends Model
             $DataLocation = $ShowLocation . "/" . $value;
 
             if (is_dir($DataLocation)){
-              // $result["content"][$value] = ShowHelper($DataLocation);
-              if ($report_object->ends_with($value, "_report") == null) {
-                $result["content"][$value] = ShowHelper($DataLocation);
+              // $result["content"][$value] = ShowHelper($report_object, $DataLocation);
+              if ($report_object->report_suffix_exists($value) == 0) {
+                $result["content"][$value] = ShowHelper($report_object, $DataLocation);
 
               } else {
                 $result["content"][$value]["content"] = array();
@@ -364,7 +284,7 @@ class report extends Model
     if (is_dir($ShowLocation)) {
 
       $Show =   array(
-        basename($ShowLocation) => ShowHelper($ShowLocation)
+        basename($ShowLocation) => ShowHelper($report_object, $ShowLocation)
       );
 
       return $Show;
@@ -400,16 +320,89 @@ class report extends Model
 
   }
 
-  public function ends_with($string, $test) {
-      $strlen = strlen($string);
-      $testlen = strlen($test);
-      if ($testlen > $strlen ) {
-        return null;
-      } elseif (substr_compare($string, $test, $strlen - $testlen, $testlen) === 0) {
-        $result = str_replace($test, "",$string);
-        return $result;
-      }
+  public function report_suffix_remove($string) {
+    $result = str_replace("_report", "",$string);
+    return $result;
   }
+
+  public function report_suffix_exists($string) {
+    $test = "_report";
+    $strlen = strlen($string);
+    $testlen = strlen($test);
+    $result = 0;
+    if ($testlen < $strlen ) {
+      if (substr_compare($string, $test, $strlen - $testlen, $testlen) === 0) {
+        $result = 1;
+      }
+
+    }
+    return $result;
+  }
+
+
+  public function title_and_menu($report_object, $data_items, $GET){
+
+    // $current_link = $report_object->get_var_to_link_utils($GET)["current_link"];
+
+    $get_popped = $GET;
+    array_pop($get_popped);
+    $back_link = $report_object->get_var_to_link_utils($get_popped)["current_link"];
+
+    $first_elements_key = $report_object->first_elements_key($data_items);
+
+    $first_element_value = $data_items[$first_elements_key];
+    // dd($first_element_value["content"]);
+    $result = array(
+      "title" => $report_object->report_suffix_remove($first_elements_key),
+      "menu_items" => array()
+    );
+    $result["menu_items"]["Back"] = $back_link;
+
+    foreach ($first_element_value["content"] as $key => $value) {
+      if (is_array($value)) {
+        if ($report_object->report_suffix_exists($key) !== 0) {
+
+
+          $link_utils = $report_object->get_var_to_link_utils($GET);
+          $current_link = $link_utils["current_link"];
+          $slug_sep = $link_utils["slug_sep"];
+          $slug_id = $link_utils["slug_id"];
+
+          $link = $current_link.$slug_sep.$slug_id."=".$key;
+          $name = $report_object->report_suffix_remove($key);
+          $result["menu_items"][$name] = $link;
+        }
+      }
+    }
+    return $result;
+  }
+
+  public function get_var_to_link_utils($array){
+
+    $slug_sep = "?";
+    $slug_id = 1;
+    $link = "";
+    foreach ($array as $key => $value) {
+      $link = $link.$slug_sep.$slug_id."=".$value;
+      if ($key > 0) {
+        $slug_sep = "&";
+      }
+      $slug_id = $slug_id+1;
+    }
+    $result = array(
+      "slug_sep" => $slug_sep,
+      "slug_id" => $slug_id,
+      "current_link" => $link,
+    );
+    return $result;
+  }
+
+  public function first_elements_key($array){
+    reset($array);
+    $result = key($array);
+    return $result;
+  }
+
 
 
 

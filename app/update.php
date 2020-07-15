@@ -7,11 +7,17 @@ use App\dropbox_utility;
 
 class update extends Model
 {
+
+  public function stasis(){
+    $result = storage_path()."/app/stasis";
+    return $result;
+  }
+
   public function webhook(){
     $update_object = new update;
     $dropbox_utility_object = new dropbox_utility;
 
-    $sync_webhook = "sync_webhook.txt";
+    $sync_webhook = $update_object->stasis()."/"."sync_webhook.txt";
 
     $signal_status = "";
 
@@ -46,9 +52,14 @@ class update extends Model
 
     $time_i = strtotime("now");
 
-    $sync_diff = $dropbox_utility_object->file_get_utf8("sync_diff.txt");
-    $sync_webhook = $dropbox_utility_object->file_get_utf8("sync_webhook.txt");
-    $sync_promise = $dropbox_utility_object->file_get_utf8("sync_promise.txt");
+    $sync_diff = $update_object->stasis()."/"."sync_diff.txt";
+    $sync_diff = $dropbox_utility_object->file_get_utf8($sync_diff);
+
+    $sync_webhook = $update_object->stasis()."/"."sync_webhook.txt";
+    $sync_webhook = $dropbox_utility_object->file_get_utf8($sync_webhook);
+
+    $sync_promise = $update_object->stasis()."/"."sync_promise.txt";
+    $sync_promise = $dropbox_utility_object->file_get_utf8($sync_promise);
 
     $result = "inactive";
 
@@ -69,11 +80,14 @@ class update extends Model
       $initialise = $update_object->initialise($update_object, $dropbox_utility_object);
       $initialise_json = json_encode($initialise, JSON_PRETTY_PRINT);
 
+      $sync_diff_path = $update_object->stasis()."/"."sync_diff.txt";
       file_put_contents(
-        "sync_diff.txt",
+        $sync_diff_path,
         $initialise_json
       );
-      file_put_contents("sync_webhook.txt", "done");
+
+      $sync_webhook_path = $update_object->stasis()."/"."sync_webhook.txt";
+      file_put_contents($sync_webhook_path, "done");
 
     }
 
@@ -166,8 +180,9 @@ class update extends Model
   }
 
   public function process($update_object, $dropbox_utility_object, $sync_diff, $time_i){
+    $sync_promise_path = $update_object->stasis()."/"."sync_promise.txt";
     file_put_contents(
-      "sync_promise.txt",
+      $sync_promise_path,
       "closed"
     );
 
@@ -215,28 +230,31 @@ class update extends Model
       unset($sync_diff["add"][$key]);
       $sync_diff_json = json_encode($sync_diff, JSON_PRETTY_PRINT);
 
+      $sync_diff_path = $update_object->stasis()."/"."sync_diff.txt";
       file_put_contents(
-        "sync_diff.txt",
+        $sync_diff_path,
         $sync_diff_json
       );
 
       $time_f = strtotime("now");
       $time_dif = $time_f-$time_i;
       if ($time_dif > 80) {
-        $result = "stage complete";
+        $result = "stage_complete";
         break;
       }
 
     }
 
+    $sync_promise_path = $update_object->stasis()."/"."sync_promise.txt";
     file_put_contents(
-      "sync_promise.txt",
+      $sync_promise_path,
       "open"
     );
 
     if ($result == "completed") {
+      $sync_diff_path = $update_object->stasis()."/"."sync_diff.txt";
       file_put_contents(
-        "sync_diff.txt",
+        $sync_diff_path,
         ""
       );
     }

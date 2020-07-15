@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\dropbox_utility;
+use App\update;
 
 class report extends Model
 {
@@ -381,7 +382,10 @@ class report extends Model
 
     $dropbox_utility = new dropbox_utility;
     $updated = "";
-    $sync_webhook = $dropbox_utility->file_get_utf8("sync_webhook.txt");
+
+    $update_object = new update;
+    $sync_webhook = $update_object->stasis()."/"."sync_webhook.txt";
+    $sync_webhook = $dropbox_utility->file_get_utf8($sync_webhook);
     if ($sync_webhook == "pending") {
       $updated = "No";
     } elseif ($sync_webhook == "done") {

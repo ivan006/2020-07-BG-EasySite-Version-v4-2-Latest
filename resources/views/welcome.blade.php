@@ -169,6 +169,8 @@
 
                   var bar_chart = {
                     completed:"❊",
+                    stage_complete:"✿",
+                    processing:"✡",
                     initialised:"✶",
                     inactive:"•"
                   };

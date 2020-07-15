@@ -7,6 +7,11 @@ use App\dropbox_utility;
 
 class report extends Model
 {
+  public function repo_path() {
+    $result = storage_path() . "/app/public";
+    return $result;
+  }
+
   // public static function show($GET) {
   //   $report_object = new report;
   //
@@ -270,7 +275,7 @@ class report extends Model
       }
     }
 
-    $pub_store = storage_path()."/app/public/";
+    $pub_store = $report_object->repo_path();
     $base_report = scandir($pub_store);
     if (isset($base_report[2])) {
       $base_report = $base_report[2];
@@ -279,7 +284,7 @@ class report extends Model
     }
     // var_dump($base_report);
 
-    $ShowLocation = $pub_store.$base_report.$URI."/";
+    $ShowLocation = $pub_store."/".$base_report.$URI."/";
 
 
     if (is_dir($ShowLocation)) {

@@ -9,7 +9,7 @@ class update extends Model
 {
   public function pending(){
     $update_object = new update;
-    $dropbox_utility = new dropbox_utility;
+    $dropbox_utility_object = new dropbox_utility;
 
     $pending_log = "updates_pending_log.txt";
 
@@ -47,7 +47,9 @@ class update extends Model
     // $timestamp = date('Y-m-d h:i:s a', time());
 
     $updates_processing_log = $dropbox_utility_object->file_get_utf8("updates_processing_log.txt");
+
     $updates_pending_log = $dropbox_utility_object->file_get_utf8("updates_pending_log.txt");
+
 
     if ($updates_processing_log !== "no") {
 
@@ -102,7 +104,7 @@ class update extends Model
 
   public function all_level_1_helper($path, $called, $update_object, $dropbox_utility_object){
 
-    $result = $dropbox_utility_object->get_from_dropbox($path, $update_object, "files/list_folder");
+    $result = $dropbox_utility_object->dropbox_get_request($path, $update_object, "files/list_folder");
 
 
     if (isset($result["entries"])) {
@@ -163,15 +165,40 @@ class update extends Model
     $pub_store = storage_path()."/app/public/";
     $files = scandir($pub_store);
 
-    // dd($pub_store);
+    $updates_processing_log = json_decode($updates_processing_log, true);
+    // dd($updates_processing_log);
 
     foreach ($updates_processing_log["remove"] as $key => $value) {
-
+      // echo $key."<br>";
     }
 
     foreach ($updates_processing_log["add"] as $key => $value) {
+      if ($value !== 0) {
+        $link_util = $dropbox_utility_object->dropbox_temp_link($key, $dropbox_utility_object);
 
+        $report_object = new report;
+        $repo_path = $report_object->repo_path();
+
+        $file_path = $repo_path.$key;
+        echo $file_path."<br>";
+
+        // file_put_contents("Tmpfile.zip", fopen("http://someurl/file.zip", 'r'));
+
+        // if (isset($file_content["link"])){
+        //   $file_content = $file_content["link"];
+        //   $file_content = file_get_contents($file_content);
+        // } else {
+        //   $file_content = "";
+        // }
+        // $result = $file_content;
+
+        // echo "<br><br>".$key." - ";
+        // var_dump($link_util);
+      }
     }
+
+
+
 
   }
 

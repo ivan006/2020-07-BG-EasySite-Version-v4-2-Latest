@@ -20,9 +20,9 @@ class dropbox_utility extends Model
 
   public function authenticate(){
     $result = 0;
-    $dropbox_utility = new dropbox_utility;
+    $dropbox_utility_object = new dropbox_utility;
     $userpwd = "";
-    $userpwd = $dropbox_utility->apikey()["dropbox_userpwd"];
+    $userpwd = $dropbox_utility_object->apikey()["dropbox_userpwd"];
     // $token = "";
     // $token = env('DROPBOX_TOKEN');
 
@@ -31,7 +31,7 @@ class dropbox_utility extends Model
       $json = json_decode($raw_data);
       if (is_object($json)) {
         if (isset($json->list_folder)) {
-          $headers = $dropbox_utility->getallheaders();
+          $headers = $dropbox_utility_object->getallheaders();
           if (hash_hmac("sha256", $raw_data, $userpwd['password']) == $headers['X-Dropbox-Signature']) {
             $result = 1;
           }
@@ -66,7 +66,7 @@ class dropbox_utility extends Model
   }
 
   public function curl_post($body, $endpoint, $userpwd, $token){
-    
+
     $ch = curl_init();
 
     // set URL and other appropriate options
@@ -130,21 +130,20 @@ class dropbox_utility extends Model
     // return $response;
   // }
 
-  public function dropbox_file_contents($path, $dropbox_utility){
-    $file_content = $dropbox_utility->get_from_dropbox($path, $dropbox_utility, "files/get_temporary_link");
-    if (isset($file_content["link"])){
-      $file_content = $file_content["link"];
-      $file_content = file_get_contents($file_content);
-    } else {
-      $file_content = "";
-    }
-    $result = $file_content;
+  public function dropbox_temp_link($path, $dropbox_utility_object){
+
+    $link_util = $dropbox_utility_object->dropbox_get_request($path, $dropbox_utility_object, "files/get_temporary_link");
+
+    $result["link"] = $link_util['link'];
+    $name = $link_util['metadata']['name'];
+    // $result["name"] = $name;
+    // $result["parent"] = str_replace("/".$name, "", $path);
 
     return $result;
   }
 
-  public function get_from_dropbox($path, $dropbox_utility, $url_suffix){
-    $dropbox_utility = new dropbox_utility;
+  public function dropbox_get_request($path, $dropbox_utility_object, $url_suffix){
+    $dropbox_utility_object = new dropbox_utility;
     $body = array(
     "path" => $path,
     );
@@ -153,7 +152,7 @@ class dropbox_utility extends Model
     // $url_suffix = "files/get_metadata";
 
     $userpwd = "";
-    // $userpwd = $dropbox_utility->apikey()["dropbox_userpwd"];
+    // $userpwd = $dropbox_utility_object->apikey()["dropbox_userpwd"];
 
     $token = "";
     $token = env('DROPBOX_TOKEN');
@@ -161,10 +160,11 @@ class dropbox_utility extends Model
     $endpoint = 'https://api.dropboxapi.com/2/'.$url_suffix;
 
 
-    $result = $dropbox_utility->curl_post($body,$endpoint,$userpwd,$token);
+    $result = $dropbox_utility_object->curl_post($body,$endpoint,$userpwd,$token);
 
     $result = json_decode($result, true);
     return $result;
   }
+
 
 }

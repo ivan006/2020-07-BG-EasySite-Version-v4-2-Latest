@@ -149,17 +149,38 @@
               ?>
             </h1>
             <div class="">
-              Synced: <?php echo $title_and_menu["updated"];?> (syncing threads: <span id="feedback_box">0</span>)
+              Synced: <?php echo $title_and_menu["updated"];?>
             </div>
+            <details>
+              <summary></summary>
+              Syncing threads: <span id="js_sync_1">0</span>
+              <p id="js_sync_2"></p>
+            </details>
 
             <script type="text/javascript">
             function fetchdata(){
               $.ajax({
-                url: '/processing',
+                url: '/sync',
                 type: 'get',
                 success: function(response){
-                  var thread_count = $('#feedback_box').text();
-                  $('#feedback_box').text(parseFloat(thread_count)+1);
+                  var js_sync_1 = $('#js_sync_1').text();
+                  $('#js_sync_1').text(parseFloat(js_sync_1)+1);
+
+
+                  var bar_chart = {
+                    completed:"❊",
+                    initialised:"✶",
+                    inactive:"•"
+                  };
+                  // var bar_chart = {
+                  //   completed:"▇",
+                  //   initialised:"▅",
+                  //   inactive:"▂"
+                  // };
+                  var js_sync_2 = $('#js_sync_2').html();
+                  $('#js_sync_2').html(js_sync_2+""+bar_chart[response]);
+
+                  // alert(response);
 
                 }
               });

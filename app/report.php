@@ -381,10 +381,10 @@ class report extends Model
 
     $dropbox_utility = new dropbox_utility;
     $updated = "";
-    $updates_processing_log = $dropbox_utility->file_get_utf8("updates_pending_log.txt");
-    if ($updates_processing_log == "yes") {
+    $sync_webhook = $dropbox_utility->file_get_utf8("sync_webhook.txt");
+    if ($sync_webhook == "pending") {
       $updated = "No";
-    } elseif ($updates_processing_log == "no") {
+    } elseif ($sync_webhook == "done") {
       $updated = "Yes";
     }
 

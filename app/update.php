@@ -7,11 +7,11 @@ use App\dropbox_utility;
 
 class update extends Model
 {
-  public function pending(){
+  public function webhook(){
     $update_object = new update;
     $dropbox_utility_object = new dropbox_utility;
 
-    $pending_log = "updates_pending_log.txt";
+    $sync_webhook = "sync_webhook.txt";
 
     $signal_status = "";
 
@@ -21,88 +21,98 @@ class update extends Model
       $result = $_GET['challenge'];
       // $timestamp = date('Y-m-d h:i:s a', time());
       // file_put_contents(
-      //   $pending_log,
+      //   $sync_webhook,
       //   "ready"." ".$timestamp
       // );
-      file_put_contents($pending_log, "yes");
+      file_put_contents($sync_webhook, "pending");
       return $result;
 
     } elseif ($dropbox_utility_object->authenticate() == 1) {
       $signal_status = "signal_security_passed";
 
-      file_put_contents($pending_log, "yes");
+      file_put_contents($sync_webhook, "pending");
 
     } else {
       $signal_status = "signal_security_failed";
 
       header('HTTP/1.0 403 Forbidden');
-      // file_put_contents($pending_log, "not_ready");
+      // file_put_contents($sync_webhook, "not_ready");
 
     }
 
   }
 
-  public function processing($update_object, $dropbox_utility_object){
+  public function sync($update_object, $dropbox_utility_object){
 
-    // $timestamp = date('Y-m-d h:i:s a', time());
+    $time_i = strtotime("now");
 
-    $updates_processing_log = $dropbox_utility_object->file_get_utf8("updates_processing_log.txt");
+    $sync_diff = $dropbox_utility_object->file_get_utf8("sync_diff.txt");
+    $sync_webhook = $dropbox_utility_object->file_get_utf8("sync_webhook.txt");
+    $sync_promise = $dropbox_utility_object->file_get_utf8("sync_promise.txt");
 
-    $updates_pending_log = $dropbox_utility_object->file_get_utf8("updates_pending_log.txt");
+    $result = "inactive";
 
+    if ($sync_diff !== "") {
 
-    if ($updates_processing_log !== "no") {
+      if ($sync_promise !== "closed") {
 
-      $update_object->add_to_completed($update_object, $dropbox_utility_object, $updates_processing_log);
+        $result = $update_object->process($update_object, $dropbox_utility_object, $sync_diff, $time_i);
 
-    } elseif ($updates_pending_log !== "no") {
+      } else {
+        $result = "processing";
+      }
 
-      $add_to_processing = $update_object->add_to_processing($update_object, $dropbox_utility_object);
-      $add_to_processing_json = json_encode($add_to_processing, JSON_PRETTY_PRINT);
+    } elseif ($sync_webhook !== "done") {
+
+      $result = "initialised";
+
+      $initialise = $update_object->initialise($update_object, $dropbox_utility_object);
+      $initialise_json = json_encode($initialise, JSON_PRETTY_PRINT);
 
       file_put_contents(
-        "updates_processing_log.txt",
-        $add_to_processing_json
+        "sync_diff.txt",
+        $initialise_json
       );
-      file_put_contents("updates_pending_log.txt", "no");
+      file_put_contents("sync_webhook.txt", "done");
 
     }
 
-    // return $add_to_processing;
+    return $result;
 
-    // $updates_processing_log = $dropbox_utility_object->file_get_utf8("updates_pending_log.txt");
-    // // $updates_processing_log = json_decode($updates_processing_log, true);
+    // return $initialise;
+
+    // $sync_diff = $dropbox_utility_object->file_get_utf8("sync_webhook.txt");
+    // // $sync_diff = json_decode($sync_diff, true);
 
   }
 
-  public function add_to_processing($update_object, $dropbox_utility_object){
+  public function initialise($update_object, $dropbox_utility_object){
 
     // $dropbox_utility_object = new dropbox_utility;
     $completed = $dropbox_utility_object->file_get_utf8("updates_completed_log.txt");
     $completed = json_decode($completed, true);
 
 
-    // $all_level_2 = $update_object->all_level_1($update_object, $dropbox_utility_object);
-    $all_level_2 = $update_object->all_level_2($update_object, $dropbox_utility_object);
+    // $dropbox_state_level_2 = $update_object->dropbox_state_level_1($update_object, $dropbox_utility_object);
+    $dropbox_state_level_2 = $update_object->dropbox_state_level_2($update_object, $dropbox_utility_object);
 
-    $result["remove"] = array_diff_assoc($completed, $all_level_2);
-    $result["add"] = array_diff_assoc($all_level_2, $completed);
+    $result["remove"] = array_diff_assoc($completed, $dropbox_state_level_2);
+    $result["add"] = array_diff_assoc($dropbox_state_level_2, $completed);
 
     return $result;
   }
 
-
-  public function all_level_1($update_object, $dropbox_utility_object){
+  public function dropbox_state_level_1($update_object, $dropbox_utility_object){
 
     $path = "";
 
-    $result = $update_object->all_level_1_helper($path, "", $update_object, $dropbox_utility_object);
+    $result = $update_object->dropbox_state_level_1_helper($path, "", $update_object, $dropbox_utility_object);
 
 
     return $result;
   }
 
-  public function all_level_1_helper($path, $called, $update_object, $dropbox_utility_object){
+  public function dropbox_state_level_1_helper($path, $called, $update_object, $dropbox_utility_object){
 
     $result = $dropbox_utility_object->dropbox_get_request($path, $update_object, "files/list_folder");
 
@@ -116,7 +126,7 @@ class update extends Model
         foreach ($result as $key => $entry) {
 
           if ($entry['.tag'] == "folder") {
-            $sub_result = $update_object->all_level_1_helper($entry['path_display'], $called, $update_object, $dropbox_utility_object);
+            $sub_result = $update_object->dropbox_state_level_1_helper($entry['path_display'], $called, $update_object, $dropbox_utility_object);
             $result[$key]["child_content"] = $sub_result;
           } else {
             $result[$key]["child_content"] = "";
@@ -127,25 +137,25 @@ class update extends Model
     return $result;
   }
 
-  public function all_level_2($update_object, $dropbox_utility_object){
+  public function dropbox_state_level_2($update_object, $dropbox_utility_object){
 
-    $all_level_1 = $update_object->all_level_1($update_object, $dropbox_utility_object);
+    $dropbox_state_level_1 = $update_object->dropbox_state_level_1($update_object, $dropbox_utility_object);
 
-    $result = $update_object->all_level_2_helper($all_level_1, $update_object);
+    $result = $update_object->dropbox_state_level_2_helper($dropbox_state_level_1, $update_object);
 
     return $result;
   }
 
-  public function all_level_2_helper($all_level_1, $update_object){
+  public function dropbox_state_level_2_helper($dropbox_state_level_1, $update_object){
     $result = array();
-    if (is_array($all_level_1)) {
-      foreach ($all_level_1 as $key => $value) {
+    if (is_array($dropbox_state_level_1)) {
+      foreach ($dropbox_state_level_1 as $key => $value) {
         if (isset($value[".tag"]) and isset($value['path_display'])) {
           $name = $value["path_display"];
           // $name = str_replace("\\", "", $name);
           if ($value[".tag"] == "folder") {
             $result[$name] = 0;
-            $result = array_merge($result, $update_object->all_level_2_helper($value["child_content"], $update_object));
+            $result = array_merge($result, $update_object->dropbox_state_level_2_helper($value["child_content"], $update_object));
           } else {
             $result[$name] = $value["server_modified"];
           }
@@ -155,47 +165,83 @@ class update extends Model
     return $result;
   }
 
-  public function add_to_completed($update_object, $dropbox_utility_object, $updates_processing_log){
+  public function process($update_object, $dropbox_utility_object, $sync_diff, $time_i){
+    file_put_contents(
+      "sync_promise.txt",
+      "closed"
+    );
+
     // file_put_contents(
     //   "updates_completed_log.txt",
-    //   $add_to_processing_json
+    //   $initialise_json
     // );
-    // file_put_contents("updates_processing_log.txt", "no");
+    // file_put_contents("sync_diff.txt", "");
 
     $pub_store = storage_path()."/app/public/";
     $files = scandir($pub_store);
 
-    $updates_processing_log = json_decode($updates_processing_log, true);
-    // dd($updates_processing_log);
+    $sync_diff = json_decode($sync_diff, true);
+    // dd($sync_diff);
 
-    foreach ($updates_processing_log["remove"] as $key => $value) {
+    $result = "completed";
+
+    foreach ($sync_diff["remove"] as $key => $value) {
       // echo $key."<br>";
     }
 
-    foreach ($updates_processing_log["add"] as $key => $value) {
+    foreach ($sync_diff["add"] as $key => $value) {
+      $report_object = new report;
+      $repo_path = $report_object->repo_path();
+
+      $file_path = $repo_path.$key;
+      // echo $file_path."<br>";
+
       if ($value !== 0) {
-        $link_util = $dropbox_utility_object->dropbox_temp_link($key, $dropbox_utility_object);
 
-        $report_object = new report;
-        $repo_path = $report_object->repo_path();
+        if (!file_exists($file_path)) {
 
-        $file_path = $repo_path.$key;
-        echo $file_path."<br>";
+          $link_util = $dropbox_utility_object->dropbox_temp_link($key, $dropbox_utility_object);
 
-        // file_put_contents("Tmpfile.zip", fopen("http://someurl/file.zip", 'r'));
+          file_put_contents($file_path, fopen($link_util["link"], 'r'));
+        }
 
-        // if (isset($file_content["link"])){
-        //   $file_content = $file_content["link"];
-        //   $file_content = file_get_contents($file_content);
-        // } else {
-        //   $file_content = "";
-        // }
-        // $result = $file_content;
+        // $file_content = file_get_contents($file_content);
 
-        // echo "<br><br>".$key." - ";
-        // var_dump($link_util);
+      } else {
+        if (!file_exists($file_path)) {
+          mkdir($file_path);
+        }
       }
+      unset($sync_diff["add"][$key]);
+      $sync_diff_json = json_encode($sync_diff, JSON_PRETTY_PRINT);
+
+      file_put_contents(
+        "sync_diff.txt",
+        $sync_diff_json
+      );
+
+      $time_f = strtotime("now");
+      $time_dif = $time_f-$time_i;
+      if ($time_dif > 80) {
+        $result = "stage complete";
+        break;
+      }
+
     }
+
+    file_put_contents(
+      "sync_promise.txt",
+      "open"
+    );
+
+    if ($result == "completed") {
+      file_put_contents(
+        "sync_diff.txt",
+        ""
+      );
+    }
+
+    return $result;
 
 
 

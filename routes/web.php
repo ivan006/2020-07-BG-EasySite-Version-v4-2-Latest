@@ -30,6 +30,6 @@ Route::get('/home', ['middleware' => ['auth'],'uses' => 'report_c@edit'])->name(
 
 
 
-Route::get('/processing', "update_c@processing");
-Route::any('/pending', "update_c@pending");
-// https://red.bluegemify.co.za/pending?challenge=123
+Route::get('/sync', "update_c@sync");
+Route::any('/webhook', "update_c@webhook");
+// https://red.bluegemify.co.za/webhook?challenge=123

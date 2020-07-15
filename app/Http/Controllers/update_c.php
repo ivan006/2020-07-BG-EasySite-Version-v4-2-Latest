@@ -15,22 +15,22 @@ class update_c extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function processing()
+    public function sync()
     {
       $update_object = new update;
 
       $dropbox_utility_object = new dropbox_utility;
 
-      $result = $update_object->processing($update_object, $dropbox_utility_object);
+      $result = $update_object->sync($update_object, $dropbox_utility_object);
 
       return $result;
     }
 
-    public function pending()
+    public function webhook()
     {
       $update_object = new update;
       $var1 = 1;
-      $var2 = $update_object->pending();
+      $var2 = $update_object->webhook();
       // $var2 = json_encode($var2, JSON_PRETTY_PRINT);
       return $var2;
     }

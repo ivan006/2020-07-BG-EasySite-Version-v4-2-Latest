@@ -289,3 +289,17 @@ https://stackoverflow.com/questions/1827659/get-a-div-value-in-jquery
 https://stackoverflow.com/questions/1570905/use-jquery-to-set-value-of-div-tag
 https://stackoverflow.com/questions/6552959/sum-of-two-input-value-by-jquery
 https://stackoverflow.com/questions/13953939/how-to-force-addition-instead-of-concatenation-in-javascript
+// usefull start
+https://stackoverflow.com/questions/3938534/download-file-to-server-from-url
+// usefull end
+google: php make dir
+https://stackoverflow.com/questions/369602/deleting-an-element-from-an-array-in-php
+https://stackoverflow.com/questions/9215588/break-out-of-if-and-foreach
+https://stackoverflow.com/questions/1936237/php-convert-date-into-seconds
+https://www.php.net/strtotime
+google: check if dir exists php
+google: result abreviated
+google: excempt route group from csrf
+https://laravel-news.com/excluding-routes-from-the-csrf-middleware
+https://stackoverflow.com/questions/4535888/jquery-text-and-newlines
+https://en.wikipedia.org/wiki/Box-drawing_character

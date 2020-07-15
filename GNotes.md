@@ -303,4 +303,4 @@ google: excempt route group from csrf
 https://laravel-news.com/excluding-routes-from-the-csrf-middleware
 https://stackoverflow.com/questions/4535888/jquery-text-and-newlines
 https://en.wikipedia.org/wiki/Box-drawing_character
-google: remove function, why does it init then processs then init again?
+google: the remove function, why does it init then processs then init again?, remove completed.txt, replace if outdated, if tab is closed will it abort process?,

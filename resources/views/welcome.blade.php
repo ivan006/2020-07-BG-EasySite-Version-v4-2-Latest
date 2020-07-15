@@ -154,7 +154,7 @@
             <details>
               <summary></summary>
               Syncing threads: <span id="js_sync_1">0</span>
-              <p id="js_sync_2"></p>
+              <!-- <p id="js_sync_2" style="word-break: break-all; letter-spacing: -14px;"></p> -->
             </details>
 
             <script type="text/javascript">
@@ -167,20 +167,18 @@
                   $('#js_sync_1').text(parseFloat(js_sync_1)+1);
 
 
-                  var bar_chart = {
-                    completed:"❊",
-                    stage_complete:"✿",
-                    processing:"✡",
-                    initialised:"✶",
-                    inactive:"•"
-                  };
                   // var bar_chart = {
-                  //   completed:"▇",
-                  //   initialised:"▅",
-                  //   inactive:"▂"
+                  //   complete:"f",
+                  //   clipping:"e",
+                  //   processing:"d",
+                  //   initialised:"c",
+                  //   initialising:"b",
+                  //   standby:"a"
                   // };
-                  var js_sync_2 = $('#js_sync_2').html();
-                  $('#js_sync_2').html(js_sync_2+""+bar_chart[response]);
+                  // // ▁▂▃▅▆▇▉
+                  //
+                  // var js_sync_2 = $('#js_sync_2').html();
+                  // $('#js_sync_2').html(js_sync_2+""+bar_chart[response]);
 
                   // alert(response);
 

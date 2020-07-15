@@ -384,11 +384,11 @@ class report extends Model
     $updated = "";
 
     $update_object = new update;
-    $sync_webhook = $update_object->stasis()."/"."sync_webhook.txt";
-    $sync_webhook = $dropbox_utility->file_get_utf8($sync_webhook);
-    if ($sync_webhook == "pending") {
+    $webhook = $update_object->status()."/"."webhook.txt";
+    $webhook = $dropbox_utility->file_get_utf8($webhook);
+    if ($webhook == "pending") {
       $updated = "No";
-    } elseif ($sync_webhook == "done") {
+    } elseif ($webhook == "done") {
       $updated = "Yes";
     }
 

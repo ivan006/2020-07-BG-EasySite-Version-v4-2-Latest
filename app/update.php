@@ -50,6 +50,9 @@ class update extends Model
 
   public function sync($update_object, $dropbox_utility_object){
 
+    // $result = $dropbox_utility_object->dropbox_get_request("", $update_object, "files/list_folder");
+    // dd($result);
+
     $time_i = strtotime("now");
 
     $diff = $update_object->status()."/"."diff.txt";
@@ -57,10 +60,12 @@ class update extends Model
 
     $webhook_path = $update_object->status()."/"."webhook.txt";
     $webhook = $dropbox_utility_object->file_get_utf8($webhook_path);
+    $webhook = preg_replace('/\s+/', '', $webhook);
     file_put_contents($webhook_path, "done");
 
     $proc_promise = $update_object->status()."/"."proc_promise.txt";
     $proc_promise = $dropbox_utility_object->file_get_utf8($proc_promise);
+    $proc_promise = preg_replace('/\s+/', '', $proc_promise);
 
     $init_promise = $update_object->status()."/"."init_promise.txt";
     $init_promise = $dropbox_utility_object->file_get_utf8($init_promise);
@@ -75,33 +80,29 @@ class update extends Model
 
     if ($diff !== "") {
 
-      if ($proc_promise !== "closed") {
+      if ($proc_promise == "open") {
 
         $result = $update_object->process($update_object, $dropbox_utility_object, $diff, $time_i, $completed);
-
       } else {
         $result = "processing";
       }
 
-    } elseif ($webhook !== "done") {
+    } elseif ($webhook == "pending") {
 
-      if ($init_promise !== "closed") {
+      $result = "initialised";
 
-        $result = "initialised";
+      $initialise = $update_object->initialise($update_object, $dropbox_utility_object);
+      $initialise_json = json_encode($initialise, JSON_PRETTY_PRINT);
 
-        $initialise = $update_object->initialise($update_object, $dropbox_utility_object);
-        $initialise_json = json_encode($initialise, JSON_PRETTY_PRINT);
+      $diff_path = $update_object->status()."/"."diff.txt";
+      file_put_contents(
+        $diff_path,
+        $initialise_json
+      );
 
-        $diff_path = $update_object->status()."/"."diff.txt";
-        file_put_contents(
-          $diff_path,
-          $initialise_json
-        );
+    } elseif ($init_promise == "closed") {
 
-      } else {
-        $result = "initialising";
-      }
-
+      $result = "initialising";
 
     }
 
@@ -259,19 +260,30 @@ class update extends Model
 
       $file_path = $repo_path.$key;
 
-      if ($value !== 0) {
-
-        if (file_exists($file_path)) {
-          exec( "rm $file_path");
+      if (file_exists($file_path)) {
+        if ($value !== 0) {
+          // exec( "rm $file_path");
+          unlink($file_path);
+        } else {
+          // exec( "rm -r -f $file_path");
+          $dropbox_utility_object->rrmdir($file_path);
         }
-
-      } else {
-
-        if (file_exists($file_path)) {
-          exec( "rm -r -f $file_path");
-        }
-
       }
+
+      $completed = $update_object->update_complete_status(
+        $update_object,
+        $completed,
+        $diff,
+        $key,
+        "remove"
+      );
+
+      $diff = $update_object->update_diff_status(
+        $update_object,
+        $diff,
+        $key,
+        "remove"
+      );
 
     }
 
@@ -292,22 +304,19 @@ class update extends Model
         mkdir($file_path);
       }
 
-      $completed[$key] = $diff["add"][$key];
-      $completed_json = json_encode($completed, JSON_PRETTY_PRINT);
-
-      $completed_path = $update_object->status()."/"."completed.txt";
-      file_put_contents(
-        $completed_path,
-        $completed_json
+      $completed = $update_object->update_complete_status(
+        $update_object,
+        $completed,
+        $diff,
+        $key,
+        "add"
       );
 
-      unset($diff["add"][$key]);
-      $diff_json = json_encode($diff, JSON_PRETTY_PRINT);
-
-      $diff_path = $update_object->status()."/"."diff.txt";
-      file_put_contents(
-        $diff_path,
-        $diff_json
+      $diff = $update_object->update_diff_status(
+        $update_object,
+        $diff,
+        $key,
+        "add"
       );
 
       $time_f = strtotime("now");
@@ -336,7 +345,37 @@ class update extends Model
     return $result;
 
 
+  }
+  public function update_complete_status($update_object, $completed, $diff, $key, $action){
 
+    if ($action == "add") {
+      $completed[$key] = $diff[$action][$key];
+    } elseif ($action == "remove") {
+      unset($completed[$key]);
+    }
+
+    $completed_json = json_encode($completed, JSON_PRETTY_PRINT);
+    $completed_path = $update_object->status()."/"."completed.txt";
+    file_put_contents(
+      $completed_path,
+      $completed_json
+    );
+
+    return $completed;
+
+  }
+
+  public function update_diff_status($update_object, $diff, $key, $action){
+
+    unset($diff[$action][$key]);
+    $diff_json = json_encode($diff, JSON_PRETTY_PRINT);
+
+    $diff_path = $update_object->status()."/"."diff.txt";
+    file_put_contents(
+      $diff_path,
+      $diff_json
+    );
+    return $diff;
 
   }
 

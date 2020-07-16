@@ -310,3 +310,11 @@ the remove function,                                done
  replace if outdated,                               pending (name change sticks)
  if tab is closed will it abort process?,           pending
  thread only when pending                           pending
+https://stackoverflow.com/questions/2109325/how-do-i-strip-all-spaces-out-of-a-string-in-php/2109339
+google: exec rm loop php
+https://stackoverflow.com/questions/4594180/deleting-all-files-from-a-folder-using-php
+https://stackoverflow.com/questions/3338123/how-do-i-recursively-delete-a-directory-and-its-entire-contents-files-sub-dir
+https://www.dropbox.com/developers/reference/webhooks
+https://www.dropbox.com/developers/documentation/http/documentation#files-list_folder-continue
+google: what exaactly does the "get the latest changes for a user" part of "Typically, the code you run in response to a notification will make a call to /files/list_folder/continue to get the latest changes for a user. " mean?
+https://www.dropbox.com/developers/documentation/http/documentation#files-list_folder-continue

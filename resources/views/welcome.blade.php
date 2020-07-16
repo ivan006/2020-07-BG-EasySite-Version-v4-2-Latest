@@ -154,7 +154,7 @@
             <details>
               <summary></summary>
               Syncing threads: <span id="js_sync_1">0</span>
-              <!-- <p id="js_sync_2" style="word-break: break-all; letter-spacing: -14px;"></p> -->
+              <p id="js_sync_2" style="word-break: break-all; letter-spacing: -14px;"></p>
             </details>
 
             <script type="text/javascript">
@@ -166,6 +166,9 @@
                   var js_sync_1 = $('#js_sync_1').text();
                   $('#js_sync_1').text(parseFloat(js_sync_1)+1);
 
+                  if (response == "complete") {
+                    alert(response);
+                  }
 
                   // var bar_chart = {
                   //   complete:"f",

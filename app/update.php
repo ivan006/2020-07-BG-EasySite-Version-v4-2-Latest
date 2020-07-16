@@ -55,8 +55,9 @@ class update extends Model
     $diff = $update_object->status()."/"."diff.txt";
     $diff = $dropbox_utility_object->file_get_utf8($diff);
 
-    $webhook = $update_object->status()."/"."webhook.txt";
-    $webhook = $dropbox_utility_object->file_get_utf8($webhook);
+    $webhook_path = $update_object->status()."/"."webhook.txt";
+    $webhook = $dropbox_utility_object->file_get_utf8($webhook_path);
+    file_put_contents($webhook_path, "done");
 
     $proc_promise = $update_object->status()."/"."proc_promise.txt";
     $proc_promise = $dropbox_utility_object->file_get_utf8($proc_promise);
@@ -64,20 +65,28 @@ class update extends Model
     $init_promise = $update_object->status()."/"."init_promise.txt";
     $init_promise = $dropbox_utility_object->file_get_utf8($init_promise);
 
+    $completed = $update_object->status()."/"."completed.txt";
+    $completed = $dropbox_utility_object->file_get_utf8($completed);
+
+
+
+
     $result = "standby";
 
     if ($diff !== "") {
 
       if ($proc_promise !== "closed") {
 
-        $result = $update_object->process($update_object, $dropbox_utility_object, $diff, $time_i);
+        $result = $update_object->process($update_object, $dropbox_utility_object, $diff, $time_i, $completed);
 
       } else {
         $result = "processing";
       }
 
     } elseif ($webhook !== "done") {
+
       if ($init_promise !== "closed") {
+
         $result = "initialised";
 
         $initialise = $update_object->initialise($update_object, $dropbox_utility_object);
@@ -89,8 +98,6 @@ class update extends Model
           $initialise_json
         );
 
-        $webhook_path = $update_object->status()."/"."webhook.txt";
-        file_put_contents($webhook_path, "done");
       } else {
         $result = "initialising";
       }
@@ -100,12 +107,12 @@ class update extends Model
 
     if ($result !== "standby") {
       $status_keys = array(
-        "complete" => "f",
-        "clipping" => "e",
-        "processing" => "d",
-        "initialised" => "c",
-        "initialising" => "b",
-        "standby" => "a",
+        "complete" => "prcd",
+        "clipping" => "rest",
+        "processing" => "prc",
+        "initialised" => "strtd",
+        "initialising" => "strt",
+        "standby" => "null",
       );
 
       $daystamp = date('Y-m-d', time());
@@ -136,8 +143,10 @@ class update extends Model
     );
 
     // $dropbox_utility_object = new dropbox_utility;
-    $completed = $dropbox_utility_object->file_get_utf8("updates_completed_log.txt");
+    $completed_path = $update_object->status()."/"."completed.txt";
+    $completed = $dropbox_utility_object->file_get_utf8($completed_path);
     $completed = json_decode($completed, true);
+
 
 
     // $dropbox_state_level_2 = $update_object->dropbox_state_level_1($update_object, $dropbox_utility_object);
@@ -220,7 +229,7 @@ class update extends Model
     return $result;
   }
 
-  public function process($update_object, $dropbox_utility_object, $diff, $time_i){
+  public function process($update_object, $dropbox_utility_object, $diff, $time_i, $completed){
     $proc_promise_path = $update_object->status()."/"."proc_promise.txt";
     file_put_contents(
       $proc_promise_path,
@@ -228,46 +237,70 @@ class update extends Model
     );
 
     // file_put_contents(
-    //   "updates_completed_log.txt",
+    //   "completed.txt",
     //   $initialise_json
     // );
     // file_put_contents("diff.txt", "");
 
     $pub_store = storage_path()."/app/public/";
-    $files = scandir($pub_store);
+    // $files = scandir($pub_store);
 
     $diff = json_decode($diff, true);
+    $completed = json_decode($completed, true);
     // dd($diff);
 
     $result = "complete";
 
+    $report_object = new report;
+    $repo_path = $report_object->repo_path();
+
+
     foreach ($diff["remove"] as $key => $value) {
-      // echo $key."<br>";
+
+      $file_path = $repo_path.$key;
+
+      if ($value !== 0) {
+
+        if (file_exists($file_path)) {
+          exec( "rm $file_path");
+        }
+
+      } else {
+
+        if (file_exists($file_path)) {
+          exec( "rm -r -f $file_path");
+        }
+
+      }
+
     }
 
     foreach ($diff["add"] as $key => $value) {
-      $report_object = new report;
-      $repo_path = $report_object->repo_path();
 
       $file_path = $repo_path.$key;
       // echo $file_path."<br>";
 
       if ($value !== 0) {
 
-        if (!file_exists($file_path)) {
+        $link_util = $dropbox_utility_object->dropbox_temp_link($key, $dropbox_utility_object);
 
-          $link_util = $dropbox_utility_object->dropbox_temp_link($key, $dropbox_utility_object);
-
-          file_put_contents($file_path, fopen($link_util["link"], 'r'));
-        }
+        file_put_contents($file_path, fopen($link_util["link"], 'r'));
 
         // $file_content = file_get_contents($file_content);
 
       } else {
-        if (!file_exists($file_path)) {
-          mkdir($file_path);
-        }
+        mkdir($file_path);
       }
+
+      $completed[$key] = $diff["add"][$key];
+      $completed_json = json_encode($completed, JSON_PRETTY_PRINT);
+
+      $completed_path = $update_object->status()."/"."completed.txt";
+      file_put_contents(
+        $completed_path,
+        $completed_json
+      );
+
       unset($diff["add"][$key]);
       $diff_json = json_encode($diff, JSON_PRETTY_PRINT);
 

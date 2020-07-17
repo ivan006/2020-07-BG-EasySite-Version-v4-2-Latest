@@ -138,10 +138,19 @@ class update extends Model
 
   public function schedule(){
 
-      $t = time();
-      $timestamp = date('Y-m-d', $t)."T".date('H:i:s', $t)."Z";
-      echo $timestamp;
-      exit;
+      // $t = time();
+      // $timestamp = date('Y-m-d', $t)."T".date('H:i:s', $t)."Z";
+      // echo $timestamp;
+      // exit;
+
+      $update_object = new update;
+      $dropbox_utility_object = new dropbox_utility;
+
+      $result = $update_object->dropbox_state_level($update_object, $dropbox_utility_object);
+      // $result = $update_object->dropbox_state_level_2($update_object, $dropbox_utility_object);
+
+      dd($result);
+
 
   }
 
@@ -158,12 +167,11 @@ class update extends Model
     $completed = json_decode($completed, true);
 
 
+    // $dropbox_state_level = $update_object->dropbox_state_level_2($update_object, $dropbox_utility_object);
+    $dropbox_state_level = $update_object->dropbox_state_level($update_object, $dropbox_utility_object);
 
-    // $dropbox_state_level_2 = $update_object->dropbox_state_level_1($update_object, $dropbox_utility_object);
-    $dropbox_state_level_2 = $update_object->dropbox_state_level_2($update_object, $dropbox_utility_object);
-
-    $result["remove"] = array_diff_assoc($completed, $dropbox_state_level_2);
-    $result["add"] = array_diff_assoc($dropbox_state_level_2, $completed);
+    $result["remove"] = array_diff_assoc($completed, $dropbox_state_level);
+    $result["add"] = array_diff_assoc($dropbox_state_level, $completed);
 
 
 
@@ -355,6 +363,7 @@ class update extends Model
 
 
   }
+
   public function update_complete_status($update_object, $completed, $diff, $key, $action){
 
     if ($action == "add") {
@@ -386,6 +395,43 @@ class update extends Model
     );
     return $diff;
 
+  }
+
+  public function dropbox_state_level($update_object, $dropbox_utility_object){
+
+    $path = "";
+
+    $result = $update_object->dropbox_state_level_helper($path, $update_object, $dropbox_utility_object);
+
+
+    return $result;
+  }
+
+  public function dropbox_state_level_helper($path, $update_object, $dropbox_utility_object){
+
+    $list = $dropbox_utility_object->dropbox_get_request($path, $update_object, "files/list_folder");
+
+
+    if (isset($list["entries"])) {
+      $list = $list["entries"];
+
+      if (isset($list)) {
+        foreach ($list as $key => $value) {
+
+          $name = $value["path_display"];
+
+          if ($value[".tag"] == "folder") {
+            // code...
+            $result[$name] = 0;
+            $result = array_merge($result, $update_object->dropbox_state_level_helper($value['path_display'], $update_object, $dropbox_utility_object));
+          } else {
+            $result[$name] = $value["server_modified"];
+          }
+
+        }
+      }
+    }
+    return $result;
   }
 
 }

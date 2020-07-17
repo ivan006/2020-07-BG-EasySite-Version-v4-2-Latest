@@ -289,6 +289,35 @@ https://stackoverflow.com/questions/1827659/get-a-div-value-in-jquery
 https://stackoverflow.com/questions/1570905/use-jquery-to-set-value-of-div-tag
 https://stackoverflow.com/questions/6552959/sum-of-two-input-value-by-jquery
 https://stackoverflow.com/questions/13953939/how-to-force-addition-instead-of-concatenation-in-javascript
+// usefull start
+https://stackoverflow.com/questions/3938534/download-file-to-server-from-url
+// usefull end
+google: php make dir
+https://stackoverflow.com/questions/369602/deleting-an-element-from-an-array-in-php
+https://stackoverflow.com/questions/9215588/break-out-of-if-and-foreach
+https://stackoverflow.com/questions/1936237/php-convert-date-into-seconds
+https://www.php.net/strtotime
+google: check if dir exists php
+google: result abreviated
+google: excempt route group from csrf
+https://laravel-news.com/excluding-routes-from-the-csrf-middleware
+https://stackoverflow.com/questions/4535888/jquery-text-and-newlines
+https://en.wikipedia.org/wiki/Box-drawing_character
+google:
+the remove function,                                done
+ why does it init then processs then init again?,   done
+ replace if outdated,                               pending (name change sticks)
+ if tab is closed will it abort process?,           pending
+ thread only when pending                           pending
+https://stackoverflow.com/questions/2109325/how-do-i-strip-all-spaces-out-of-a-string-in-php/2109339
+google: exec rm loop php
+https://stackoverflow.com/questions/4594180/deleting-all-files-from-a-folder-using-php
+https://stackoverflow.com/questions/3338123/how-do-i-recursively-delete-a-directory-and-its-entire-contents-files-sub-dir
+https://www.dropbox.com/developers/reference/webhooks
+https://www.dropbox.com/developers/documentation/http/documentation#files-list_folder-continue
+google: what exaactly does the "get the latest changes for a user" part of "Typically, the code you run in response to a notification will make a call to /files/list_folder/continue to get the latest changes for a user. " mean?
+https://www.dropbox.com/developers/documentation/http/documentation#files-list_folder-continue
+
 https://www.dropboxforum.com/t5/Discuss-Dropbox-Developer-API/Get-App-name-from-DROPBOX-API/td-p/324984
 google: creat file and set timestamp php
 https://www.php.net/manual/en/function.touch.php
@@ -306,3 +335,6 @@ https://www.dropboxforum.com/t5/Dropbox-installs-integrations/Time-Zone-Issue-wh
 https://www.dropbox.com/account
 google: sa timezone
 https://www.dropboxforum.com/t5/Dropbox-accounts-billing/Trouble-with-setting-time-zone/td-p/207699
+google: strcuture instanly
+log progress
+rest

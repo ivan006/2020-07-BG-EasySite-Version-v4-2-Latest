@@ -35,4 +35,11 @@ class update_c extends Controller
       return $var2;
     }
 
+    public function schedule()
+    {
+      $update_object = new update;
+      $result = $update_object->schedule();
+      return $result;
+    }
+
 }

@@ -136,6 +136,15 @@ class update extends Model
 
   }
 
+  public function schedule(){
+
+      $t = time();
+      $timestamp = date('Y-m-d', $t)."T".date('H:i:s', $t)."Z";
+      echo $timestamp;
+      exit;
+
+  }
+
   public function initialise($update_object, $dropbox_utility_object){
     $init_promise_path = $update_object->status()."/"."init_promise.txt";
     file_put_contents(
@@ -266,7 +275,7 @@ class update extends Model
           unlink($file_path);
         } else {
           // exec( "rm -r -f $file_path");
-          $dropbox_utility_object->rrmdir($file_path);
+          $dropbox_utility_object->rrmdir($dropbox_utility_object, $file_path);
         }
       }
 

@@ -27,7 +27,7 @@ class report_c extends Controller
     $GET = $_GET;
 
 
-    $data_items = $report_object->show_array($GET);
+    $data_items = $report_object->show_array($report_object, $GET);
 
 
     $title = "";
@@ -35,7 +35,7 @@ class report_c extends Controller
     if (!empty($data_items)) {
       reset($data_items);
       $title = key($data_items);
-      $title = $report_object->ends_with($title, "_report");
+      $title = $report_object->report_suffix_remove($title);
 
     }
 

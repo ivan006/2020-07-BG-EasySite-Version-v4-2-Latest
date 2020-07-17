@@ -338,3 +338,13 @@ https://www.dropboxforum.com/t5/Dropbox-accounts-billing/Trouble-with-setting-ti
 google: strcuture instanly
 log progress
 rest
+google: give 1 value if folder not explored and 0 if explored
+google: read remote state log
+if empty scan root if has content scan first unexplored folder if all are explored conclude process
+on scan explore folder and then if its not the root then mark folder as explored all sub folders mark as unexaplored
+save to remote state log
+google: get all element that have specific valu php
+google: php elements with same value
+https://www.php.net/manual/en/function.array-intersect.php
+https://stackoverflow.com/questions/19966490/find-all-array-keys-that-has-same-value
+https://www.w3schools.com/php/func_array_filter.asp

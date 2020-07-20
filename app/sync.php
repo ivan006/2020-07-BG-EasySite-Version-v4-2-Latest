@@ -149,12 +149,9 @@ class sync extends Model
 
       }
 
-
       if ($next_process_stager == "implementation_standby") {
-
         file_put_contents($state_diff_path, "");
         $next_process_stager = "standby";
-
       }
 
       file_put_contents($process_stager_path, $next_process_stager);
@@ -163,22 +160,12 @@ class sync extends Model
     }
 
     if ($process_stager !== "standby") {
-      // $status_keys = array(
-      //   "complete" => "prcd",
-      //   "calculation_rest" => "rest",
-      //   "implementationing" => "prc",
-      //   "calculationd" => "strtd",
-      //   "initialising" => "strt",
-      //   "standby" => "null",
-      // );
 
       $daystamp = date('Y-m-d', time());
       $log_path = $sync_object->status()."/../logs/"."log-".$daystamp.".txt";
-
       $timestamp = date('H:i:s', time());
-      // $msg = $timestamp." - ".$status_keys[$result];
       $msg = $timestamp." - ".$process_stager;
-      // $msg = $timestamp." - ".$result;
+
       file_put_contents($log_path, $msg.PHP_EOL, FILE_APPEND);
     }
     return $process_stager;

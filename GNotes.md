@@ -377,10 +377,10 @@ dropbox_sync_state_mngr
 		standby
 		calculation
 		calculation_standby
-		calculation_rest
+		//calculation_rest
 		implementation
 		implementation_standby
-		implementation_rest
+		//implementation_rest
 	data_compararer
 		dropbox
 		local

@@ -53,47 +53,19 @@ class sync extends Model
 
   public function sync($sync_object, $dropbox_utility_object){
 
-    // $result = $dropbox_utility_object->dropbox_get_request("", $sync_object, "files/list_folder");
-    // dd($result);
-
     $time_i = strtotime("now");
 
-    $state_diff_path = $sync_object->status()."/"."state_diff.txt";
-    $state_diff = $dropbox_utility_object->file_get_utf8($state_diff_path);
-    $state_diff = json_decode($state_diff, true);
-    $sync_object->state_diff = $state_diff;
-
-    $state_local = $sync_object->status()."/"."state_local.txt";
-    $state_local = $dropbox_utility_object->file_get_utf8($state_local);
-    $state_local = json_decode($state_local, true);
-    $sync_object->state_local = $state_local;
-
-    $state_remote_path = $sync_object->status()."/"."state_remote.txt";
-    $state_remote = $dropbox_utility_object->file_get_utf8($state_remote_path);
-    $state_remote = json_decode($state_remote, true);
-    $sync_object->state_remote = $state_remote;
+    $sync_object->check_data($sync_object, $dropbox_utility_object);
 
     $process_queue_path = $sync_object->status()."/"."process_queue.txt";
     $process_queue = $dropbox_utility_object->file_get_utf8($process_queue_path);
     $process_queue = preg_replace('/\s+/', '', $process_queue);
 
-    file_put_contents($process_queue_path, "vacant");
-
-    $promise_proc_path = $sync_object->status()."/"."promise_proc.txt";
-    $promise_proc = $dropbox_utility_object->file_get_utf8($promise_proc_path);
-    $promise_proc = preg_replace('/\s+/', '', $promise_proc);
-
-    $promise_init_path = $sync_object->status()."/"."promise_init.txt";
-    $promise_init = $dropbox_utility_object->file_get_utf8($promise_init_path);
-
     $process_stager_path = $sync_object->status()."/"."process_stager.txt";
     $process_stager = $dropbox_utility_object->file_get_utf8($process_stager_path);
     $process_stager = preg_replace('/\s+/', '', $process_stager);
 
-    $standby_toggle = "no";
-    if ($process_queue == "vacant" and $process_stager == "standby") {
-      $standby_toggle = "yes";
-    }
+    file_put_contents($process_queue_path, "vacant");
 
     if ($process_queue == "occupied" and $process_stager == "standby") {
       $process_stager = "calculation";
@@ -190,7 +162,7 @@ class sync extends Model
 
     }
 
-    if ($standby_toggle !== "yes") {
+    if ($process_stager !== "standby") {
       // $status_keys = array(
       //   "complete" => "prcd",
       //   "calculation_rest" => "rest",
@@ -401,6 +373,25 @@ class sync extends Model
     if (isset($sync_object->state_remote[$path])) {
       $sync_object->state_remote[$path] = "is_folder";
     }
+
+  }
+
+  public function check_data($sync_object, $dropbox_utility_object){
+
+    $state_diff_path = $sync_object->status()."/"."state_diff.txt";
+    $state_diff = $dropbox_utility_object->file_get_utf8($state_diff_path);
+    $state_diff = json_decode($state_diff, true);
+    $sync_object->state_diff = $state_diff;
+
+    $state_local = $sync_object->status()."/"."state_local.txt";
+    $state_local = $dropbox_utility_object->file_get_utf8($state_local);
+    $state_local = json_decode($state_local, true);
+    $sync_object->state_local = $state_local;
+
+    $state_remote_path = $sync_object->status()."/"."state_remote.txt";
+    $state_remote = $dropbox_utility_object->file_get_utf8($state_remote_path);
+    $state_remote = json_decode($state_remote, true);
+    $sync_object->state_remote = $state_remote;
 
   }
 

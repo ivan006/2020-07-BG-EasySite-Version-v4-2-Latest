@@ -335,17 +335,49 @@ https://www.dropboxforum.com/t5/Dropbox-installs-integrations/Time-Zone-Issue-wh
 https://www.dropbox.com/account
 google: sa timezone
 https://www.dropboxforum.com/t5/Dropbox-accounts-billing/Trouble-with-setting-time-zone/td-p/207699
-google: strcuture instanly
-log progress
-rest
+google: strcuture instanly (not using 2 stage dropbox structure assessing)
+log progress  done
+rest between calc timeouts          done
 google: give 1 value if folder not explored and 0 if explored
-google: read remote state log
-if empty scan root if has content scan first unexplored folder if all are explored conclude process
-on scan explore folder and then if its not the root then mark folder as explored all sub folders mark as unexaplored
-save to remote state log
 google: get all element that have specific valu php
 google: php elements with same value
 https://www.php.net/manual/en/function.array-intersect.php
 https://stackoverflow.com/questions/19966490/find-all-array-keys-that-has-same-value
 https://www.w3schools.com/php/func_array_filter.asp
-google: - if empty scan root if has content scan first unexplored folder if all are explored conclude process  - on scan explore folder and then if its not the root then mark folder as explored all sub folders mark as unexaplored  - save to remote state log  - if tired rest  - repeat   # 2   - shallow scan - log - check pulse - go deeper and repeat   #3 - process state - data state  #4 - read remote state log - scan - write remote state log - check pulse - repeat
+google: - if empty scan root if has content scan first unexplored folder if all are explored conclude process
+- on scan explore folder and then if its not the root then mark folder as explored all sub folders mark as unexaplored
+- save to remote state log
+- if tired rest
+- repeat
+# 2
+- shallow scan
+- log
+- check pulse
+- go deeper and repeat
+#3
+- process state
+- data state
+#4
+- read remote state log
+- scan unexplored items
+- write remote state log
+- check pulse
+- repeat
+https://www.w3schools.com/php/func_array_search.asp
+https://stackoverflow.com/questions/20017409/how-to-solve-php-error-notice-array-to-string-conversion-in
+google: set prop php as array
+https://stackoverflow.com/questions/33389938/class-properties-as-array-instead-of-variables
+https://stackoverflow.com/questions/804850/get-php-class-property-by-string
+google:
+dropbox_sync_state_mngr
+	process_stager
+		standby
+		//recepting
+		calculating
+		calculating_standby
+		implimenting
+		implimenting_standby
+	data_compararer
+		dropbox
+		local
+		diff

@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Datatables;
-use App\update;
+use App\sync;
 use App\dropbox_utility;
 
-class update_c extends Controller
+class sync_c extends Controller
 {
 
     /**
@@ -17,28 +17,28 @@ class update_c extends Controller
      */
     public function sync()
     {
-      $update_object = new update;
+      $sync_object = new sync;
 
       $dropbox_utility_object = new dropbox_utility;
 
-      $result = $update_object->sync($update_object, $dropbox_utility_object);
+      $result = $sync_object->sync($sync_object, $dropbox_utility_object);
 
       return $result;
     }
 
-    public function webhook()
+    public function process_queue()
     {
-      $update_object = new update;
+      $sync_object = new sync;
       $var1 = 1;
-      $var2 = $update_object->webhook();
+      $var2 = $sync_object->process_queue();
       // $var2 = json_encode($var2, JSON_PRETTY_PRINT);
       return $var2;
     }
 
     public function schedule()
     {
-      $update_object = new update;
-      $result = $update_object->schedule();
+      $sync_object = new sync;
+      $result = $sync_object->schedule();
       return $result;
     }
 

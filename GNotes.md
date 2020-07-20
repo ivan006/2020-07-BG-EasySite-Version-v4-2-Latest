@@ -370,14 +370,34 @@ https://stackoverflow.com/questions/33389938/class-properties-as-array-instead-o
 https://stackoverflow.com/questions/804850/get-php-class-property-by-string
 google:
 dropbox_sync_state_mngr
-	process_stager
+	process_queue
+		occupied
+		vacant
+	process_stager (mode/steps)
 		standby
-		//recepting
-		calculating
-		calculating_standby
-		implimenting
-		implimenting_standby
+		calculation
+		calculation_standby
+		calculation_rest
+		implementation
+		implementation_standby
+		implementation_rest
 	data_compararer
 		dropbox
 		local
 		diff
+google: repeat process php
+https://stackoverflow.com/questions/15040391/repeat-php-code-or-script
+google: if is not both php
+https://stackoverflow.com/questions/35270321/php-if-statement-either-but-not-both/35270392
+google: xand php
+https://www.w3resource.com/php/statement/break.php
+https://stackoverflow.com/questions/9353240/php-switch-statement-inside-another-switch-statement
+google: it use to work like
+standby
+//reception		if nothing else
+calculation_rest	if diff is null and proc promise open and proc time is 80+
+calculation		if diff is null and proc promise open
+calculation_standby	if diff is null and proc promise closed
+implementation_rest	if remote state is not {} or webhook is pending and init promise is open and  and proc time is 80+
+implementation		if remote state is not {} or webhook is pending and init promise is open
+implementation_standby	if remote state is not {} or webhook is pending and init promise is closed

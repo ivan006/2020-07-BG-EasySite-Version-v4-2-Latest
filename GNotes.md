@@ -1,3 +1,13 @@
+
+google:
+the remove function,                                done
+ why does it init then processs then init again?,   done
+ replace if outdated,                               pending (name change sticks)
+ if tab is closed will it abort process?,           pending
+ thread only when pending                           pending
+if file is move betwween cacl and imp error         pending
+log progress                                        done
+rest between calc timeouts                          done
 google: dropbox shared host
 https://www.computerworld.com/article/3262636/top-10-file-sharing-options-dropbox-box-google-drive-onedrive-and-more.html
 https://rk.md/2011/install-dropbox-on-bluehost-shared-host/
@@ -303,12 +313,6 @@ google: excempt route group from csrf
 https://laravel-news.com/excluding-routes-from-the-csrf-middleware
 https://stackoverflow.com/questions/4535888/jquery-text-and-newlines
 https://en.wikipedia.org/wiki/Box-drawing_character
-google:
-the remove function,                                done
- why does it init then processs then init again?,   done
- replace if outdated,                               pending (name change sticks)
- if tab is closed will it abort process?,           pending
- thread only when pending                           pending
 https://stackoverflow.com/questions/2109325/how-do-i-strip-all-spaces-out-of-a-string-in-php/2109339
 google: exec rm loop php
 https://stackoverflow.com/questions/4594180/deleting-all-files-from-a-folder-using-php
@@ -336,8 +340,6 @@ https://www.dropbox.com/account
 google: sa timezone
 https://www.dropboxforum.com/t5/Dropbox-accounts-billing/Trouble-with-setting-time-zone/td-p/207699
 google: strcuture instanly (not using 2 stage dropbox structure assessing)
-log progress  done
-rest between calc timeouts          done
 google: give 1 value if folder not explored and 0 if explored
 google: get all element that have specific valu php
 google: php elements with same value

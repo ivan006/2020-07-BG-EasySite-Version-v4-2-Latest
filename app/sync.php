@@ -65,6 +65,10 @@ class sync extends Model
     $process_stager = $dropbox_utility_object->file_get_utf8($process_stager_path);
     $process_stager = preg_replace('/\s+/', '', $process_stager);
 
+    $state_diff_path = $sync_object->status()."/"."state_diff.txt";
+    // $state_local = $sync_object->status()."/"."state_local.txt";
+    $state_remote_path = $sync_object->status()."/"."state_remote.txt";
+
     file_put_contents($process_queue_path, "vacant");
 
     if ($process_queue == "occupied" and $process_stager == "standby") {
@@ -94,7 +98,6 @@ class sync extends Model
 
         $search_results = array_search("unexplored", $sync_object->state_remote);
       }
-
 
       if ($next_process_stager == "calculation_standby") {
 
@@ -132,7 +135,7 @@ class sync extends Model
 
       foreach ($sync_object->state_diff["add"] as $key => $value) {
 
-        $result = $sync_object->implementation_part_2(
+        $sync_object->implementation_part_2(
           $sync_object,
           $dropbox_utility_object,
           $key,
@@ -143,7 +146,7 @@ class sync extends Model
         $time_f = strtotime("now");
         $time_dif = $time_f-$time_i;
         if ($time_dif > 80) {
-          $process_stager = "implementation";
+          $next_process_stager = "implementation";
           break;
         }
 

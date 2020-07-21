@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\dropbox_utility;
-use App\update;
+use App\sync;
 
 class report extends Model
 {
@@ -381,21 +381,21 @@ class report extends Model
     }
 
     $dropbox_utility = new dropbox_utility;
-    $updated = "";
+    $in_sync = "";
 
-    $update_object = new update;
-    $webhook = $update_object->status()."/"."webhook.txt";
-    $webhook = $dropbox_utility->file_get_utf8($webhook);
-    if ($webhook == "pending") {
-      $updated = "No";
-    } elseif ($webhook == "done") {
-      $updated = "Yes";
+    $sync_object = new sync;
+    $process_queue = $sync_object->status()."/"."process_queue.txt";
+    $process_queue = $dropbox_utility->file_get_utf8($process_queue);
+    if ($process_queue == "occupied") {
+      $in_sync = "No";
+    } elseif ($process_queue == "vacant") {
+      $in_sync = "Yes";
     }
 
     $result = array(
       "title" => $title,
       "menu_items" => $menu_items,
-      "updated" => $updated,
+      "in_sync" => $in_sync,
     );
     return $result;
   }

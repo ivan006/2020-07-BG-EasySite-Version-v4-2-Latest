@@ -149,7 +149,7 @@
               ?>
             </h1>
             <div class="">
-              Synced: <?php echo $title_and_menu["updated"];?>
+              Synced: <?php echo $title_and_menu["in_sync"];?>
             </div>
             <details>
               <summary></summary>

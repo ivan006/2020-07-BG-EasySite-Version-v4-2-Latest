@@ -380,12 +380,14 @@ class report extends Model
       }
     }
 
-    $dropbox_utility = new dropbox_utility;
+    $dropbox_utility_object = new dropbox_utility;
     $in_sync = "";
 
     $sync_object = new sync;
-    $process_queue = $sync_object->status()."/"."process_queue.txt";
-    $process_queue = $dropbox_utility->file_get_utf8($process_queue);
+    $process_queue_path = $sync_object->status()."/"."process_queue.txt";
+    $process_queue = $dropbox_utility_object->file_get_utf8($process_queue_path);
+    $process_queue = preg_replace('/\s+/', '', $process_queue);
+
     if ($process_queue == "occupied") {
       $in_sync = "No";
     } elseif ($process_queue == "vacant") {

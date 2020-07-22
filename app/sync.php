@@ -32,7 +32,9 @@ class sync extends Model
       //   $process_queue,
       //   "ready"." ".$timestamp
       // );
-      // file_put_contents($process_queue, "occupied");
+      
+      // $process_queue_path = $sync_object->status()."/"."process_queue.txt";
+      // file_put_contents($process_queue_path, "occupied");
       return $result;
 
     } elseif ($dropbox_utility_object->authenticate() == 1) {

@@ -11,8 +11,8 @@ class dropbox_utility extends Model
     $result = array(
       "dropbox_token" => env('DROPBOX_TOKEN'),
       "dropbox_userpwd" => array(
-        "username" => "z3o9nmtmd0ikqf4",
-        "password" => "ntibchtud5z4lmr",
+        "username" => env('DROPBOX_USR'),
+        "password" => env('DROPBOX_PWD'),
       ),
     );
     return $result;

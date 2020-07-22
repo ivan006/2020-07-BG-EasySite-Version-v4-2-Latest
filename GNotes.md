@@ -1,11 +1,11 @@
 
 google:
 the remove function,                                done
- why does it init then processs then init again?,   done
- replace if outdated,                               pending (name change sticks)
- if tab is closed will it abort process?,           pending
- thread only when pending                           pending
-if file is move betwween cacl and imp error         pending
+why does it init then processs then init again?,    done
+replace if outdated,                                done (name change sticks)
+handle user abort jam                               pending
+thread only when pending                            done
+handle calc imp discrepency Error                   pending
 log progress                                        done
 rest between calc timeouts                          done
 google: dropbox shared host
@@ -403,3 +403,28 @@ calculation_standby	if diff is null and proc promise closed
 implementation_rest	if remote state is not {} or webhook is pending and init promise is open and  and proc time is 80+
 implementation		if remote state is not {} or webhook is pending and init promise is open
 implementation_standby	if remote state is not {} or webhook is pending and init promise is closed
+google: stop interval ajax based on responce
+https://makitweb.com/how-to-fire-ajax-request-on-regular-interval/
+https://stackoverflow.com/questions/5687600/jquery-call-ajax-every-10-seconds
+https://api.jquery.com/jquery.ajax/
+https://stackoverflow.com/questions/18266718/conditional-if-statement-after-ajax-post-using-response-is-this-ok
+google: stop recuring ajax if
+google: repeat ajax call until responce
+http://www.queryadmin.com/2283/repeat-ajax-get-until-a-specific-response-is-met-in-jquery/
+https://www.codegrepper.com/code-examples/javascript/jquery+wait+for+all+ajax+requests+to+complete
+google: repeat ajax call until specific response javascript
+google: pass argument to setinvertval function
+https://stackoverflow.com/questions/10872006/how-do-i-change-the-value-of-a-global-variable-inside-of-a-function
+https://www.javatpoint.com/javascript-global-variable
+google: global variable not updatabe
+https://stackoverflow.com/questions/14731040/unable-to-update-global-variable-in-javascript-html-function
+google: stop setinteval
+https://stackoverflow.com/questions/109086/stop-setinterval-call-in-javascript
+https://www.w3schools.com/jsref/met_win_clearinterval.asp
+https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_win_clearinterval
+https://electrictoolbox.com/check-php-script-already-running/
+https://www.sitepoint.com/proc-open-communicate-with-the-outside-world/
+google: inter process ipc promises
+https://www.w3schools.com/php/func_misc_connection_aborted.asp
+https://stackoverflow.com/questions/2385047/when-will-destruct-not-be-called-in-php
+https://stackoverflow.com/questions/13499399/explanation-of-register-shutdown-function

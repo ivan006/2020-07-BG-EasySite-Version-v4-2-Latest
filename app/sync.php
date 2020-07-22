@@ -162,7 +162,8 @@ class sync extends Model
 
     }
 
-    if ($process_stager !== "standby") {
+    // if ($process_stager !== "standby") {
+    if ($process_stager == "implementation" or $process_stager == "calculation") {
 
       $daystamp = date('Y-m-d', time());
       $log_path = $sync_object->status()."/../logs/"."log-".$daystamp.".txt";

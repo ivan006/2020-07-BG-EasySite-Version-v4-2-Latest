@@ -148,49 +148,46 @@
               echo $title_and_menu["title"];
               ?>
             </h1>
-            <div class="">
-              Synced: <?php echo $title_and_menu["in_sync"];?>
+            <div class="" style="color: rgb(150,150,150)">
+              Up to date: <span id="js_sync_1"><?php echo $title_and_menu["in_sync"];?></span>
+              <span id="js_sync_2"></span>
             </div>
-            <details>
-              <summary></summary>
-              Syncing threads: <span id="js_sync_1">0</span>
-              <p id="js_sync_2" style="word-break: break-all; letter-spacing: -14px;"></p>
-            </details>
+            <?php
+              if ($title_and_menu["in_sync"] == "No") {
+                $sync_toggle = 1;
+              } else {
+                $sync_toggle = 0;
+              }
+            ?>
 
             <script type="text/javascript">
-            function fetchdata(){
-              $.ajax({
-                url: '/sync',
-                type: 'get',
-                success: function(response){
-                  var js_sync_1 = $('#js_sync_1').text();
-                  $('#js_sync_1').text(parseFloat(js_sync_1)+1);
-
-                  if (response == "complete") {
-                    alert(response);
-                  }
-
-                  // var bar_chart = {
-                  //   complete:"f",
-                  //   clipping:"e",
-                  //   processing:"d",
-                  //   initialised:"c",
-                  //   initialising:"b",
-                  //   standby:"a"
-                  // };
-                  // // ▁▂▃▅▆▇▉
-                  //
-                  // var js_sync_2 = $('#js_sync_2').html();
-                  // $('#js_sync_2').html(js_sync_2+""+bar_chart[response]);
-
-                  // alert(response);
-
-                }
-              });
-            }
 
             $(document).ready(function(){
-              setInterval(fetchdata,5000);
+
+              var sync_toggle = <?php echo $sync_toggle; ?>;
+              var step = 0;
+              function fetchdata(){
+                $.ajax({
+                  url: '/sync',
+                  type: 'get',
+                  success: function(response){
+
+                    if (response == "implementation") {
+                      $('#js_sync_1').text("Yes");
+                      $('#js_sync_2').text("");
+                      clearInterval(cron);
+                    } else {
+                      step = parseFloat(step)+1;
+                      $('#js_sync_2').text("("+step+" "+response+")");
+                    }
+                  }
+                });
+              }
+
+              if (sync_toggle == 1) {
+                var cron = setInterval(fetchdata,5000);
+              }
+
             });
             </script>
             <hr>

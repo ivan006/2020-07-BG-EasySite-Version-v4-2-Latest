@@ -32,7 +32,7 @@ class sync extends Model
       //   $process_queue,
       //   "ready"." ".$timestamp
       // );
-      
+
       // $process_queue_path = $sync_object->status()."/"."process_queue.txt";
       // file_put_contents($process_queue_path, "occupied");
       return $result;
@@ -181,52 +181,58 @@ class sync extends Model
 
   public function schedule(){
 
-      // // $t = time();
-      // // $timestamp = date('Y-m-d', $t)."T".date('H:i:s', $t)."Z";
-      // // echo $timestamp;
-      // // exit;
+      // // // $t = time();
+      // // // $timestamp = date('Y-m-d', $t)."T".date('H:i:s', $t)."Z";
+      // // // echo $timestamp;
+      // // // exit;
+      // //
+      // // $sync_object = new sync;
+      // // $dropbox_utility_object = new dropbox_utility;
+      // //
+      // //
+      // // $result = $sync_object->calculation_part_1($sync_object, $dropbox_utility_object, $time_i);
+      // //
+      // //
+      // // $state_remote = $sync_object->status()."/"."state_remote.txt";
+      // // $state_remote = $dropbox_utility_object->file_get_utf8($state_remote);
+      // // $state_remote = json_decode($state_remote, true);
+      // //
+      // // // $result = $sync_object->dropbox_state_level_2($sync_object, $dropbox_utility_object);
+      // //
+      // // dd($result);
+      //
       //
       // $sync_object = new sync;
       // $dropbox_utility_object = new dropbox_utility;
-      //
-      //
-      // $result = $sync_object->calculation_part_1($sync_object, $dropbox_utility_object, $time_i);
-      //
       //
       // $state_remote = $sync_object->status()."/"."state_remote.txt";
       // $state_remote = $dropbox_utility_object->file_get_utf8($state_remote);
       // $state_remote = json_decode($state_remote, true);
       //
-      // // $result = $sync_object->dropbox_state_level_2($sync_object, $dropbox_utility_object);
+      // if (!empty($state_remote)) {
+      //   $unexplored_key = array_search("unexplored", $state_remote);
+      //   if ($unexplored_key !== false) {
+      //     $path = $unexplored_key;
       //
-      // dd($result);
+      //     $temp = $sync_object->status()."/"."temp.txt";
+      //     $state_remote_json = json_encode($state_remote, JSON_PRETTY_PRINT);
+      //     file_put_contents(
+      //       $temp,
+      //       $unexplored_key
+      //     );
+      //   } else {
+      //     return "calculationd";
+      //   }
+      // } else {
+      //   $path = "";
+      // }
+      // var_dump($unexplored_key);
 
-
-      $sync_object = new sync;
-      $dropbox_utility_object = new dropbox_utility;
-
-      $state_remote = $sync_object->status()."/"."state_remote.txt";
-      $state_remote = $dropbox_utility_object->file_get_utf8($state_remote);
-      $state_remote = json_decode($state_remote, true);
-
-      if (!empty($state_remote)) {
-        $unexplored_key = array_search("unexplored", $state_remote);
-        if ($unexplored_key !== false) {
-          $path = $unexplored_key;
-
-          $temp = $sync_object->status()."/"."temp.txt";
-          $state_remote_json = json_encode($state_remote, JSON_PRETTY_PRINT);
-          file_put_contents(
-            $temp,
-            $unexplored_key
-          );
-        } else {
-          return "calculationd";
-        }
-      } else {
-        $path = "";
-      }
-      var_dump($unexplored_key);
+      $var = [
+        123=>123,
+        234=>234
+      ];
+      dd($var);
 
 
   }

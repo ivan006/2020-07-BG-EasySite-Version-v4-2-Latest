@@ -148,48 +148,51 @@
               echo $title_and_menu["title"];
               ?>
             </h1>
-            <div class="" style="color: rgb(150,150,150)">
-              Up to date: <span id="js_sync_1"><?php echo $title_and_menu["in_sync"];?></span>
-              <span id="js_sync_2"></span>
-            </div>
             <?php
               if ($title_and_menu["in_sync"] == "No") {
                 $sync_toggle = 1;
+                ?>
+                <div class="" style="color: rgb(150,150,150)">
+                  Up to date: <span id="js_sync_1"><?php echo $title_and_menu["in_sync"];?></span>
+                  <span id="js_sync_2"></span>
+                </div>
+                <script type="text/javascript">
+
+                $(document).ready(function(){
+
+                  var sync_toggle = <?php echo $sync_toggle; ?>;
+                  var step = 0;
+                  function fetchdata(){
+                    $.ajax({
+                      url: '/sync',
+                      type: 'get',
+                      success: function(response){
+
+                        if (response == "implementation") {
+                          $('#js_sync_1').text("Yes");
+                          $('#js_sync_2').text("");
+                          clearInterval(cron);
+                        } else {
+                          step = parseFloat(step)+1;
+                          $('#js_sync_2').text("("+step+" "+response+")");
+                        }
+                      }
+                    });
+                  }
+
+                  if (sync_toggle == 1) {
+                    var cron = setInterval(fetchdata,5000);
+                  }
+
+                });
+                </script>
+
+                <?php
               } else {
                 $sync_toggle = 0;
               }
             ?>
 
-            <script type="text/javascript">
-
-            $(document).ready(function(){
-
-              var sync_toggle = <?php echo $sync_toggle; ?>;
-              var step = 0;
-              function fetchdata(){
-                $.ajax({
-                  url: '/sync',
-                  type: 'get',
-                  success: function(response){
-
-                    if (response == "implementation") {
-                      $('#js_sync_1').text("Yes");
-                      $('#js_sync_2').text("");
-                      clearInterval(cron);
-                    } else {
-                      step = parseFloat(step)+1;
-                      $('#js_sync_2').text("("+step+" "+response+")");
-                    }
-                  }
-                });
-              }
-
-              if (sync_toggle == 1) {
-                var cron = setInterval(fetchdata,5000);
-              }
-
-            });
-            </script>
             <hr>
 
             <div class="row">

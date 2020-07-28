@@ -127,7 +127,8 @@ class report extends Model
               <?php echo $data_item_key; ?>
             </h<?php echo $LayerNumber ?>>
 
-            <div class="rounded p-2" style="border: solid 1px Gainsboro;">
+            <!-- <div class="rounded p-2" style="border: solid 1px Gainsboro;"> -->
+            <div class="p-2" style="border-top: solid 1px Gainsboro; border-bottom: solid 1px Gainsboro;">
               <?php echo $report_object->show_html_helper($data_item_value["content"],$LayerNumber,$restrict_width_count_new) ?>
             </div>
 
@@ -174,7 +175,7 @@ class report extends Model
             <div class="p-2">
               <?php
               if ($is_small_toggle == 0) {
-                echo "<pre>";
+                echo "<pre style='white-space: pre-wrap;'>";
                 echo $data_item_value["content"];
                 echo "</pre>";
               } else {

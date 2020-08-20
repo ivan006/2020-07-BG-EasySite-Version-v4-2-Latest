@@ -21,9 +21,12 @@ class report extends Model
   //   return $html;
   // }
 
+
+
   public function show_html($report_object, $data_items, $GET) {
 
     $report_object = new report;
+    $dropbox_utility_object = new dropbox_utility;
 
     // $data_items = $report_object->show_array($_GET);
 
@@ -41,7 +44,7 @@ class report extends Model
       $get_popped = $GET;
       array_pop($get_popped);
 
-      $link = $report_object->get_var_to_link_utils($get_popped)["current_link"];
+      $link = $dropbox_utility_object->get_var_to_link_utils($get_popped)["current_link"];
 
 
       ob_start();
@@ -348,7 +351,7 @@ class report extends Model
   }
 
 
-  public function title_and_menu($report_object, $data_items, $GET){
+  public function title_and_menu($report_object, $data_items, $GET, $dropbox_utility_object){
 
     $result = array();
     $first_elements_key = $report_object->first_elements_key($data_items);
@@ -361,7 +364,7 @@ class report extends Model
 
     $get_popped = $GET;
     array_pop($get_popped);
-    $back_link = $report_object->get_var_to_link_utils($get_popped)["current_link"];
+    $back_link = $dropbox_utility_object->get_var_to_link_utils($get_popped)["current_link"];
     $menu_items["Back"] = $back_link;
 
     foreach ($first_element_value["content"] as $key => $value) {
@@ -369,7 +372,7 @@ class report extends Model
         if ($report_object->report_suffix_exists($key) !== 0) {
 
 
-          $link_utils = $report_object->get_var_to_link_utils($GET);
+          $link_utils = $dropbox_utility_object->get_var_to_link_utils($GET);
           $current_link = $link_utils["current_link"];
           $slug_sep = $link_utils["slug_sep"];
           $slug_id = $link_utils["slug_id"];
@@ -399,26 +402,6 @@ class report extends Model
       "title" => $title,
       "menu_items" => $menu_items,
       "in_sync" => $in_sync,
-    );
-    return $result;
-  }
-
-  public function get_var_to_link_utils($array){
-
-    $slug_sep = "?";
-    $slug_id = 1;
-    $link = "";
-    foreach ($array as $key => $value) {
-      $link = $link.$slug_sep.$slug_id."=".$value;
-      if ($key > 0) {
-        $slug_sep = "&";
-      }
-      $slug_id = $slug_id+1;
-    }
-    $result = array(
-      "slug_sep" => $slug_sep,
-      "slug_id" => $slug_id,
-      "current_link" => $link,
     );
     return $result;
   }

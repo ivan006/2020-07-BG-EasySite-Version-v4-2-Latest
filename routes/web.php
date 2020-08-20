@@ -34,3 +34,4 @@ Route::get('/sync', "sync_c@sync");
 Route::any('/process_queue', "sync_c@process_queue");
 Route::any('/schedule', "sync_c@schedule");
 // https://red.bluegemify.co.za/process_queue?challenge=123
+Route::any('/images', "images_c@index");

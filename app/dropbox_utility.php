@@ -181,5 +181,27 @@ class dropbox_utility extends Model
    }
  }
 
+ public function get_var_to_link_utils($array){
+
+   $slug_sep = "?";
+   $slug_id = 1;
+   $link = "";
+   foreach ($array as $key => $value) {
+     $link = $link.$slug_sep.$slug_id."=".$value;
+     if ($key > 0) {
+       $slug_sep = "&";
+     }
+     $slug_id = $slug_id+1;
+   }
+   $result = array(
+     "slug_sep" => $slug_sep,
+     "slug_id" => $slug_id,
+     "current_link" => $link,
+   );
+   return $result;
+ }
+
+
+
 
 }

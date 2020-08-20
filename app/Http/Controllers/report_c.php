@@ -4,17 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\report;
+use App\dropbox_utility;
 use Illuminate\Support\Facades\Auth;
 
 class report_c extends Controller
 {
   public static function show() {
     $report_object = new report;
+    $dropbox_utility_object = new dropbox_utility;
+
     $GET = $_GET;
 
     $data_items = $report_object->show_array($report_object, $GET);
 
-    $title_and_menu = $report_object->title_and_menu($report_object, $data_items, $GET);
+    $title_and_menu = $report_object->title_and_menu($report_object, $data_items, $GET, $dropbox_utility_object);
     $body = $report_object->show_html($report_object, $data_items, $GET);
 
 

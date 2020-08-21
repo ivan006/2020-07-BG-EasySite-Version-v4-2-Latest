@@ -180,3 +180,6 @@ googe: external storage integration dropbox
 // network version end
 images
 https://stackoverflow.com/questions/36066144/how-should-i-serve-an-image-with-laravel/36477345
+https://stackoverflow.com/questions/56747096/class-app-file-not-found-in-laravel-5-8/56747146
+google: Image source not readable
+https://stackoverflow.com/questions/36157824/intervention-image-upload-error-image-source-not-readable

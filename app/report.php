@@ -35,6 +35,7 @@ class report extends Model
     // echo $data_items ;
     // exit;
     // dd($data_items);
+    // up till here
 
     if (!empty($data_items)) {
 
@@ -60,6 +61,7 @@ class report extends Model
       $reportdata_html = "";
 
       $data_items_0_items = $data_items[$first_elements_key];
+      // dd($data_items_0_items);
 
       $reportdata_html =  $reportdata_html . $report_object->show_html_helper($data_items_0_items["content"],1,0);
 
@@ -177,13 +179,20 @@ class report extends Model
           <div class="<?php echo $key_value_width ?>  d-inline-block ">
             <div class="p-2">
               <?php
-              if ($is_small_toggle == 0) {
-                echo "<pre style='white-space: pre-wrap;'>";
-                echo $data_item_value["content"];
-                echo "</pre>";
+              if ($data_item_value["type"] == "image") {
+
+                echo '<img src="/images?1='.$data_item_value["content"].'" alt="">';
               } else {
-                echo $data_item_value["content"];
+                if ($is_small_toggle == 0) {
+                  echo "<pre style='white-space: pre-wrap;'>";
+                  echo $data_item_value["content"];
+                  echo "</pre>";
+                } else {
+                  echo $data_item_value["content"];
+                }
               }
+
+
               ?>
 
 
@@ -248,21 +257,24 @@ class report extends Model
               // $result["content"][$value] = ShowHelper($report_object, $DataLocation);
               if ($report_object->report_suffix_exists($value) == 0) {
                 $result["content"][$value] = ShowHelper($report_object, $DataLocation);
+                $result["content"][$value]["type"] = "dir";
 
               } else {
                 $result["content"][$value]["content"] = array();
                 $result["content"][$value]["size"] = 0;
+                $result["content"][$value]["type"] = "report";
               }
             } else {
               $this_object = new report;
-              $result["content"][$value]["content"] = $this_object->read_file($DataLocation);
-              $result["content"][$value]["size"] = strlen($result["content"][$value]["content"]);
+
+              $result["content"][$value] = $this_object->read_file_attr($DataLocation);
 
             }
 
             $size_sum = $size_sum+$result["content"][$value]["size"];
           }
         }
+        // $result["type"] = "dir";
 
         $result["size"] = $size_sum;
 
@@ -303,32 +315,38 @@ class report extends Model
   }
 
 
-  public function read_file($DataLocation) {
+  public function read_file_attr($DataLocation) {
 
     // $result = file_get_contents($DataLocation);
 
     if (file_exists($DataLocation)){
       if (mime_content_type($DataLocation) == "image/jpeg") {
-        $result = "";
+        $result["content"] = str_replace(storage_path(), "", $DataLocation);
         // $result = $DataLocation;
         // $type = pathinfo($result, PATHINFO_EXTENSION);
         // $result = file_get_contents($result);
         // $result = 'data:image/' . $type . ';base64,' . base64_encode($result);
+        $result["type"] = "image";
 
 
       } elseif (mime_content_type($DataLocation) == "text/plain" OR mime_content_type($DataLocation) == "text/html") {
 
-        $result = file_get_contents($DataLocation);
+        $result["content"] = file_get_contents($DataLocation);
+        $result["type"] = "txt";
       } else {
-        $result = "error dont support this: ".mime_content_type($DataLocation);
-      }
-      return $result;
-    } else {
-      $result = "error";
 
-      return $result;
+        $result["content"] = "error dont support this: ".mime_content_type($DataLocation);
+        $result["type"] = "other";
+      }
+
+    } else {
+      $result["content"] = "error";
+      $result["type"] = "none";
+
     }
 
+    $result["size"] = strlen($result["content"]);
+    return $result;
   }
 
   public function report_suffix_remove($string) {

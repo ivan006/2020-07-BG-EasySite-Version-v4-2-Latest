@@ -84,7 +84,7 @@ class report extends Model
     }
   }
 
-  public function show_html_helper($data_items, $LayerNumber, $restrict_width_count){
+  public function show_html_helper($data_items, $LayerNumber, $nest_level_priviledge_count){
     $report_object = new report;
 
     $LayerNumber = $LayerNumber+1;
@@ -107,34 +107,34 @@ class report extends Model
 
           // reset($data_item_value["content"]);
           // $data_item_value_0 = key($data_item_value["content"]);
-          // $restrict_width_toggle = "InBl_Wi_50Per";
+          // $nest_level_priviledge_toggle = "InBl_Wi_50Per";
           // if (isset($data_item_value["content"][$data_item_value_0])) {
           //   $data_item_value_0_value = $data_item_value["content"][$data_item_value_0];
           //   // code...
           //   if (is_array($data_item_value_0_value)) {
-          //     $restrict_width_toggle = "Wi_100Per";
+          //     $nest_level_priviledge_toggle = "Wi_100Per";
           //   }
           // }
 
-          $restrict_width_toggle = "Wi_100Per";
-          $restrict_width_count_new = $restrict_width_count;
-          if ($data_item_value["size"] < 250 AND $restrict_width_count < 1) {
-            $restrict_width_toggle = "InBl_Wi_50Per";
-            $restrict_width_count_new = $restrict_width_count+1;
+          $nest_level_priviledge_toggle = "Wi_100Per";
+          $nest_level_priviledge_count_new = $nest_level_priviledge_count;
+          if ($data_item_value["size"] < 250 AND $nest_level_priviledge_count < 1) {
+            $nest_level_priviledge_toggle = "InBl_Wi_50Per";
+            $nest_level_priviledge_count_new = $nest_level_priviledge_count+1;
           }
 
 
 
           ob_start();
           ?>
-          <div class=" <?php echo $restrict_width_toggle ?> d-inline-block ">
+          <div style="vertical-align:top;" class=" <?php echo $nest_level_priviledge_toggle ?> d-inline-block ">
             <h<?php echo $LayerNumber ?> class="" style="margin-top: <?php echo (1/$LayerNumber)*5*16 ?>px;">
               <?php echo $data_item_key; ?>
             </h<?php echo $LayerNumber ?>>
 
             <!-- <div class="rounded p-2" style="border: solid 1px Gainsboro;"> -->
             <div class="p-2" style="border-top: solid 1px Gainsboro; border-bottom: solid 1px Gainsboro;">
-              <?php echo $report_object->show_html_helper($data_item_value["content"],$LayerNumber,$restrict_width_count_new) ?>
+              <?php echo $report_object->show_html_helper($data_item_value["content"],$LayerNumber,$nest_level_priviledge_count_new) ?>
             </div>
 
 
@@ -156,37 +156,31 @@ class report extends Model
 
         ob_start();
 
-        $key_value_width = "Wi_100Per";
-        $restrict_width_toggle = "Wi_100Per";
+        $key_value_orientation = "Wi_100Per";
+        $nest_level_priviledge_toggle = "Wi_100Per";
         $is_small_toggle = 0;
         if ($data_item_value["size"] < 50) {
-          if ($restrict_width_count < 1) {
 
-            $restrict_width_toggle = "InBl_Wi_50Per";
-            $key_value_width = "InBl_Wi_50Per";
-
-          } elseif ($restrict_width_count < 2) {
-
-            // $restrict_width_toggle = "InBl_Wi_50Per";
-            $key_value_width = "InBl_Wi_50Per";
-
-
+          if ($nest_level_priviledge_count < 1) {
+            $nest_level_priviledge_toggle = "InBl_Wi_50Per";
           }
+
+          $key_value_orientation = "InBl_Wi_50Per";
           $is_small_toggle = 1;
 
         }
 
         ?>
-        <div class="<?php echo $restrict_width_toggle ?>  d-inline-block BoSi_BoBo">
+        <div style="vertical-align:top;" class="<?php echo $nest_level_priviledge_toggle ?>  d-inline-block BoSi_BoBo">
           <!-- <table  class="rounded border border-secondary w-100" style="border-collapse: separate;"> -->
-          <div class="<?php echo $key_value_width ?>  d-inline-block " >
+          <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>  d-inline-block " >
             <div class="p-2">
               <b>
                 <?php echo $data_item_key; ?>
               </b>
             </div>
           </div>
-          <div class="<?php echo $key_value_width ?>  d-inline-block ">
+          <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>  d-inline-block ">
             <div class="p-2">
               <?php
               if ($data_item_value["type"] == "image") {
@@ -248,7 +242,7 @@ class report extends Model
           </div>
         </div>
         <?php
-        // $restrict_width_toggle
+        // $nest_level_priviledge_toggle
         $result_part_1_loose_files = $result_part_1_loose_files.ob_get_contents();
 
         ob_end_clean();
@@ -375,7 +369,7 @@ class report extends Model
         // $result = file_get_contents($result);
         // $result = 'data:image/' . $type . ';base64,' . base64_encode($result);
         $result["type"] = "image";
-        $result["size"] = 0;
+        $result["size"] = 150;
 
 
       } elseif (mime_content_type($DataLocation) == "text/plain" OR mime_content_type($DataLocation) == "text/html") {

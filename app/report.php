@@ -166,6 +166,7 @@ class report extends Model
           $is_small_toggle = 1;
 
         }
+
         ?>
         <div class="<?php echo $restrict_width_toggle ?>  d-inline-block BoSi_BoBo">
           <!-- <table  class="rounded border border-secondary w-100" style="border-collapse: separate;"> -->
@@ -180,8 +181,46 @@ class report extends Model
             <div class="p-2">
               <?php
               if ($data_item_value["type"] == "image") {
+                $modal_id = preg_replace('/[^a-z0-9]/i', '_', $data_item_key);
+                ?>
+                <!-- Button to Open the Modal -->
+                <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
+                  Button
+                </button> -->
+                <a href="#" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
+                  <img style="max-width:100%;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
+                </a>
 
-                echo '<img src="/images?1='.$data_item_value["content"].'" alt="">';
+                <!-- The Modal -->
+                <div class="modal" id="<?php echo $modal_id ?>">
+                  <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+
+                      <!-- Modal Header -->
+                      <div class="modal-header">
+                        <!-- <h4 class="modal-title">Modal Heading</h4> -->
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      </div>
+
+                      <!-- Modal body -->
+                      <div class="modal-body" >
+                        <!-- Modal body.. -->
+                        <div class="" style="text-align: center;">
+
+                          <img style="max-width:100%;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
+                        </div>
+                      </div>
+
+                      <!-- Modal footer -->
+                      <!-- <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                      </div> -->
+
+                    </div>
+                  </div>
+                </div>
+
+                <?php
               } else {
                 if ($is_small_toggle == 0) {
                   echo "<pre style='white-space: pre-wrap;'>";
@@ -327,25 +366,28 @@ class report extends Model
         // $result = file_get_contents($result);
         // $result = 'data:image/' . $type . ';base64,' . base64_encode($result);
         $result["type"] = "image";
+        $result["size"] = 0;
 
 
       } elseif (mime_content_type($DataLocation) == "text/plain" OR mime_content_type($DataLocation) == "text/html") {
 
         $result["content"] = file_get_contents($DataLocation);
         $result["type"] = "txt";
+        $result["size"] = strlen($result["content"]);
       } else {
 
         $result["content"] = "error dont support this: ".mime_content_type($DataLocation);
         $result["type"] = "other";
+        $result["size"] = strlen($result["content"]);
       }
 
     } else {
       $result["content"] = "error";
       $result["type"] = "none";
+      $result["size"] = strlen($result["content"]);
 
     }
 
-    $result["size"] = strlen($result["content"]);
     return $result;
   }
 

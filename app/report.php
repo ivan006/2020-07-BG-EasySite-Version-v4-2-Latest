@@ -159,10 +159,19 @@ class report extends Model
         $key_value_width = "Wi_100Per";
         $restrict_width_toggle = "Wi_100Per";
         $is_small_toggle = 0;
-        if ($data_item_value["size"] < 50 AND $restrict_width_count < 1) {
-          $restrict_width_toggle = "InBl_Wi_50Per";
+        if ($data_item_value["size"] < 50) {
+          if ($restrict_width_count < 1) {
 
-          $key_value_width = "InBl_Wi_50Per";
+            $restrict_width_toggle = "InBl_Wi_50Per";
+            $key_value_width = "InBl_Wi_50Per";
+
+          } elseif ($restrict_width_count < 2) {
+
+            // $restrict_width_toggle = "InBl_Wi_50Per";
+            $key_value_width = "InBl_Wi_50Per";
+
+
+          }
           $is_small_toggle = 1;
 
         }

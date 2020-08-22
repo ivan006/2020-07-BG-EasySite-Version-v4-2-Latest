@@ -176,7 +176,7 @@ class report extends Model
           <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>  d-inline-block " >
             <div class="p-2">
               <b>
-                <?php echo $data_item_key; ?>
+                <?php echo  preg_replace('/\\.[^.\\s]{3,4}$/', '', $data_item_key); ?>
               </b>
             </div>
           </div>
@@ -191,7 +191,7 @@ class report extends Model
                   Button
                 </button> -->
                 <a href="#" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
-                  <img style="max-width:100%;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
+                  <img style="max-width:150px;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
                 </a>
 
                 <!-- The Modal -->

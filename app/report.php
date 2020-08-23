@@ -69,7 +69,7 @@ class report extends Model
       ob_start();
       ?>
       <!-- <div style="text-align: center;"> -->
-      <div style="">
+      <div style="" class="row">
 
         <?php echo $reportdata_html; ?>
       </div>
@@ -119,7 +119,7 @@ class report extends Model
           $nest_level_priviledge_toggle = "Wi_100Per";
           $nest_level_priviledge_count_new = $nest_level_priviledge_count;
           if ($data_item_value["size"] < 250 AND $nest_level_priviledge_count < 1) {
-            $nest_level_priviledge_toggle = "InBl_Wi_50Per";
+            $nest_level_priviledge_toggle = "col-md-6";
             $nest_level_priviledge_count_new = $nest_level_priviledge_count+1;
           }
 
@@ -127,7 +127,7 @@ class report extends Model
 
           ob_start();
           ?>
-          <div style="vertical-align:top;" class=" <?php echo $nest_level_priviledge_toggle ?> d-inline-block ">
+          <div style="" class=" <?php echo $nest_level_priviledge_toggle ?>  ">
             <h<?php echo $LayerNumber ?> class="" style="margin-top: <?php echo (1/$LayerNumber)*5*16 ?>px;">
               <?php echo $data_item_key; ?>
             </h<?php echo $LayerNumber ?>>
@@ -162,7 +162,7 @@ class report extends Model
         if ($data_item_value["size"] < 50) {
 
           if ($nest_level_priviledge_count < 1) {
-            $nest_level_priviledge_toggle = "InBl_Wi_50Per";
+            $nest_level_priviledge_toggle = "col-md-6";
           }
 
           $key_value_orientation = "InBl_Wi_50Per";
@@ -171,16 +171,16 @@ class report extends Model
         }
 
         ?>
-        <div style="vertical-align:top;" class="<?php echo $nest_level_priviledge_toggle ?>  d-inline-block BoSi_BoBo">
+        <div style="" class="<?php echo $nest_level_priviledge_toggle ?>   BoSi_BoBo">
           <!-- <table  class="rounded border border-secondary w-100" style="border-collapse: separate;"> -->
-          <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>  d-inline-block " >
+          <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>    d-inline-block" >
             <div class="p-2">
               <b>
                 <?php echo  preg_replace('/\\.[^.\\s]{3,4}$/', '', $data_item_key); ?>
               </b>
             </div>
           </div>
-          <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>  d-inline-block ">
+          <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>    d-inline-block">
             <div class="p-2">
               <?php
               if ($data_item_value["type"] == "image") {
@@ -472,6 +472,17 @@ class report extends Model
   public function first_elements_key($array){
     reset($array);
     $result = key($array);
+    return $result;
+  }
+
+  public function last_update(){
+    $cmd = 'git log --pretty="%ci" -n1 HEAD';
+    $cmd_dir = storage_path()."/../";
+    exec(
+      "cd $cmd_dir;
+      $cmd 2>&1"
+      , $result
+    );
     return $result;
   }
 

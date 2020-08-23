@@ -231,6 +231,9 @@
               <?php echo $body ?>
             </div>
           </div>
+          <div class="container container-small my-2" style="color: grey;">
+            App last updated: <?php echo $last_update[0] ?>
+          </div>
         </div>
 
       </body>

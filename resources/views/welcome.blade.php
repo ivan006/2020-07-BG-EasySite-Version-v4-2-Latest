@@ -154,6 +154,11 @@
               echo $title_and_menu["title"];
               ?>
             </h1>
+
+
+
+            <?php echo $section_global_html ?>
+
             <?php
               if ($title_and_menu["in_sync"] == "No") {
                 $sync_toggle = 1;
@@ -198,7 +203,6 @@
                 $sync_toggle = 0;
               }
             ?>
-
             <hr>
 
             <div class="row">
@@ -231,9 +235,9 @@
               <?php echo $body ?>
             </div>
           </div>
-          <div class="container container-small my-2" style="color: grey;">
+          <!-- <div class="container container-small my-2" style="color: grey;">
             App last updated: <?php echo $last_update[0] ?>
-          </div>
+          </div> -->
         </div>
 
       </body>

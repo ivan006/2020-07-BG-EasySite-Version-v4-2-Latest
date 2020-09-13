@@ -25,7 +25,9 @@ class report extends Model
 
   public function show_html($report_object, $data_items, $GET) {
 
-    $report_object = new report;
+
+
+    // $report_object = new report;
     $dropbox_utility_object = new dropbox_utility;
 
     // $data_items = $report_object->show_array($_GET);
@@ -63,7 +65,9 @@ class report extends Model
       $data_items_0_items = $data_items[$first_elements_key];
       // dd($data_items_0_items);
 
-      $reportdata_html =  $reportdata_html . $report_object->show_html_helper($data_items_0_items["content"],1,0);
+      if (isset($data_items_0_items["content"])) {
+        $reportdata_html =  $reportdata_html . $report_object->show_html_helper($data_items_0_items["content"],1,0);
+      }
 
 
       ob_start();
@@ -102,7 +106,7 @@ class report extends Model
       // echo "<br>";
 
       if (is_array($data_item_value["content"])) {
-        if ($report_object->report_suffix_exists($data_item_key) == 0) {
+        if ($data_item_value['type'] !== "report" AND $data_item_value['type'] !== "section") {
 
 
           // reset($data_item_value["content"]);
@@ -278,58 +282,113 @@ class report extends Model
     return $result;
   }
 
-  // public static function show($ShowID) {
-  public static function show_array($report_object, $GET) {
+  public static function ShowHelper($report_object, $ShowLocation) {
+    // $report_object = new report;
+    $result = array();
+    $shallowList = scandir($ShowLocation);
 
-    if(!function_exists('App\ShowHelper')){
-      function ShowHelper($report_object, $ShowLocation) {
-        // $report_object = new report;
-        $result = array();
-        $shallowList = scandir($ShowLocation);
+    $size_sum = 0;
+    // $result["content"] = array();
 
-        $size_sum = 0;
-        // $result["content"] = array();
+    foreach ($shallowList as $key => $value) {
 
-        foreach ($shallowList as $key => $value) {
+      if (!in_array($value,array(".","..")))  {
+        $DataLocation = $ShowLocation . "/" . $value;
 
-          if (!in_array($value,array(".","..")))  {
-            $DataLocation = $ShowLocation . "/" . $value;
+        if (is_dir($DataLocation)){
+          // $result["content"][$value] = ShowHelper($report_object, $DataLocation);
 
-            if (is_dir($DataLocation)){
-              // $result["content"][$value] = ShowHelper($report_object, $DataLocation);
-              if ($report_object->report_suffix_exists($value) == 0) {
-                $result["content"][$value] = ShowHelper($report_object, $DataLocation);
-                $result["content"][$value]["type"] = "dir";
+          $datatype_report_status = $report_object->datatype_status('_report', $value);
 
-              } else {
-                $result["content"][$value]["content"] = array();
-                $result["content"][$value]["size"] = 0;
-                $result["content"][$value]["type"] = "report";
-              }
-            } else {
-              $this_object = new report;
+          $datatype_section_status = $report_object->datatype_status('_section_global', $value);
 
-              $result["content"][$value] = $this_object->read_file_attr($DataLocation);
+          if ($datatype_report_status == 0 AND $datatype_section_status == 0) {
+            $result["content"][$value] = $report_object->ShowHelper($report_object, $DataLocation);
+            $result["content"][$value]["type"] = "dir";
 
+          } else {
+
+            if ($datatype_report_status == 1) {
+              $result["content"][$value]["content"] = array();
+              $result["content"][$value]["size"] = 0;
+              $result["content"][$value]["type"] = "report";
+            } elseif ($datatype_section_status == 1) {
+              $result["content"][$value]["content"] = array();
+              $result["content"][$value]["size"] = 0;
+              $result["content"][$value]["type"] = "section";
             }
 
-            $size_sum = $size_sum+$result["content"][$value]["size"];
           }
+        } else {
+          $this_object = new report;
+
+          $result["content"][$value] = $this_object->read_file_attr($DataLocation);
+
         }
-        // $result["type"] = "dir";
 
-        $result["size"] = $size_sum;
-
-        return  $result;
+        $size_sum = $size_sum+$result["content"][$value]["size"];
       }
     }
+    // $result["type"] = "dir";
+
+    $result["size"] = $size_sum;
+
+    return  $result;
+  }
+
+
+
+  // public static function show($ShowID) {
+
+  public static function show_array($report_object, $GET) {
+
+    $result_inner = array();
+    // if(!function_exists('App\ShowHelper')){
+    //
+    // }
 
 
     // $ShowLocation = PostM::ShowLocation($ShowID);
     // $ShowLocation = base_path()."/storage/app/public/";
+
+    $breadcrumb_array = $GET;
+    $page_folder_path = $report_object->page_folder_path($report_object, $breadcrumb_array);
+
+
+    if (is_dir($page_folder_path)) {
+      $result_inner = $report_object->ShowHelper($report_object, $page_folder_path);
+    }
+
+    $result = array(
+      basename($page_folder_path) => $result_inner
+    );
+    // dd($result);
+    return $result;
+  }
+
+  public static function section_global_items($report_object) {
+
+    $result_inner = array();
+
+    $breadcrumb_array = array("_section_global");
+    $page_folder_path = $report_object->page_folder_path($report_object, $breadcrumb_array);
+
+
+    if (is_dir($page_folder_path)) {
+      $result_inner = $report_object->ShowHelper($report_object, $page_folder_path);
+    }
+
+    $result = array(
+      basename($page_folder_path) => $result_inner
+    );
+    // dd($result);
+    return $result;
+  }
+
+  public function page_folder_path($report_object, $breadcrumb_array) {
     $URI = "";
-    if (!empty($GET)) {
-      foreach ($GET as $key => $value) {
+    if (!empty($breadcrumb_array)) {
+      foreach ($breadcrumb_array as $key => $value) {
         $URI = $URI."/".$value;
       }
     }
@@ -343,18 +402,10 @@ class report extends Model
     }
     // var_dump($base_report);
 
-    $ShowLocation = $pub_store."/".$base_report.$URI."/";
-
-
-    if (is_dir($ShowLocation)) {
-
-      $Show =   array(
-        basename($ShowLocation) => ShowHelper($report_object, $ShowLocation)
-      );
-
-      return $Show;
-    }
+    $result = $pub_store."/".$base_report.$URI."/";
+    return $result;
   }
+
 
 
   public function read_file_attr($DataLocation) {
@@ -399,12 +450,11 @@ class report extends Model
     return $result;
   }
 
-  public function report_suffix_exists($string) {
-    $test = "_report";
+  public function datatype_status($test, $string) {
     $strlen = strlen($string);
     $testlen = strlen($test);
     $result = 0;
-    if ($testlen < $strlen ) {
+    if ($testlen <= $strlen ) {
       if (substr_compare($string, $test, $strlen - $testlen, $testlen) === 0) {
         $result = 1;
       }
@@ -414,7 +464,9 @@ class report extends Model
   }
 
 
-  public function title_and_menu($report_object, $data_items, $GET, $dropbox_utility_object){
+  public function title_and_menu($report_object, $GET, $dropbox_utility_object){
+
+    $data_items = $report_object->show_array($report_object, $GET);
 
     $result = array();
     $first_elements_key = $report_object->first_elements_key($data_items);
@@ -432,7 +484,7 @@ class report extends Model
 
     foreach ($first_element_value["content"] as $key => $value) {
       if (is_array($value)) {
-        if ($report_object->report_suffix_exists($key) !== 0) {
+        if ($value['type'] == "report") {
 
 
           $link_utils = $dropbox_utility_object->get_var_to_link_utils($GET);

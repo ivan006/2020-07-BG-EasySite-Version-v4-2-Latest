@@ -185,3 +185,5 @@ https://stackoverflow.com/questions/56747096/class-app-file-not-found-in-laravel
 google: Image source not readable
 https://stackoverflow.com/questions/36157824/intervention-image-upload-error-image-source-not-readable
 https://stackoverflow.com/questions/9743536/best-way-to-encode-a-path-to-be-used-as-html-valid-id-or-name-tag
+https://stackoverflow.com/questions/16334310/display-the-current-git-version-in-php
+https://stackoverflow.com/questions/52439209/image-resize-laravel

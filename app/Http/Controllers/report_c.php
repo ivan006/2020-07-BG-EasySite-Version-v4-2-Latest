@@ -15,14 +15,19 @@ class report_c extends Controller
 
     $GET = $_GET;
 
-    $data_items = $report_object->show_array($report_object, $GET);
 
-    $title_and_menu = $report_object->title_and_menu($report_object, $data_items, $GET, $dropbox_utility_object);
+    $title_and_menu = $report_object->title_and_menu($report_object, $GET, $dropbox_utility_object);
+
+    $data_items = $report_object->show_array($report_object, $GET);
     $body = $report_object->show_html($report_object, $data_items, $GET);
+
+
+    $section_global = $report_object->section_global_items($report_object);
+    $section_global_html = $report_object->show_html($report_object, $section_global, $GET);
 
     $last_update = $report_object->last_update($report_object);
 
-    return view('welcome', compact('body','title_and_menu', 'last_update'));
+    return view('welcome', compact('body','title_and_menu', 'last_update', 'section_global_html'));
 
   }
 

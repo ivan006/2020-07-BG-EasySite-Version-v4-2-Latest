@@ -427,7 +427,13 @@ class report extends Model
 
         $result["content"] = file_get_contents($DataLocation);
         $result["type"] = "txt";
-        $result["size"] = strlen($result["content"]);
+
+        $content_no_js = preg_replace(
+          '/<script\b[^>]*>(.*?)<\/script>/is',
+          "",
+          $result["content"]
+        );
+        $result["size"] = strlen($content_no_js);
       } else {
 
         $result["content"] = "error dont support this: ".mime_content_type($DataLocation);

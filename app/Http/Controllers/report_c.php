@@ -19,6 +19,7 @@ class report_c extends Controller
     $title_and_menu = $report_object->title_and_menu($report_object, $GET, $dropbox_utility_object);
 
     $data_items = $report_object->show_array($report_object, $GET);
+    // dd($data_items);
     $body = $report_object->show_html($report_object, $data_items, $GET);
 
 

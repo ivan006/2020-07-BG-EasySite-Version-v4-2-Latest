@@ -137,7 +137,7 @@ class report extends Model
             </h<?php echo $LayerNumber ?>>
 
             <!-- <div class="rounded p-2" style="border: solid 1px Gainsboro;"> -->
-            <div class="p-2" style="border-top: solid 1px Gainsboro; border-bottom: solid 1px Gainsboro;">
+            <div class="p-2 row" style="border-top: solid 1px Gainsboro; border-bottom: solid 1px Gainsboro;">
               <?php echo $report_object->show_html_helper($data_item_value["content"], $LayerNumber, $nestlevel_count_new) ?>
             </div>
 
@@ -163,7 +163,7 @@ class report extends Model
         $key_value_orientation = "Wi_100Per";
         $itemsection_sharespace = "Wi_100Per";
         $is_small_toggle = 0;
-        if ($data_item_value["size"] < 50) {
+        if ($data_item_value["size"] < 150) {
 
           if ($nestlevel_count < 1) {
             $itemsection_sharespace = "col-md-6";
@@ -420,7 +420,7 @@ class report extends Model
         // $result = file_get_contents($result);
         // $result = 'data:image/' . $type . ';base64,' . base64_encode($result);
         $result["type"] = "image";
-        $result["size"] = 49;
+        $result["size"] = 149;
 
 
       } elseif (mime_content_type($DataLocation) == "text/plain" OR mime_content_type($DataLocation) == "text/html") {

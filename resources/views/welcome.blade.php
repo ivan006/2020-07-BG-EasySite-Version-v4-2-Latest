@@ -235,9 +235,9 @@
               <?php echo $body ?>
             </div>
           </div>
-          <!-- <div class="container container-small my-2" style="color: grey;">
+          <div class="container container-small my-2" style="color: hsl(0,0%,80%);">
             App last updated: <?php echo $last_update[0] ?>
-          </div> -->
+          </div>
         </div>
 
       </body>

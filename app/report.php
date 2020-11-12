@@ -541,6 +541,12 @@ class report extends Model
       $cmd 2>&1"
       , $result
     );
+    if ( !empty($result)) {
+      $result = $result;
+    } else {
+      $result = array("unknown");
+    }
+    // dd($result);
     return $result;
   }
 

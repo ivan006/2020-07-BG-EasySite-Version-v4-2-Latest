@@ -28,6 +28,10 @@ Although this is theoretically a good system for startup businesses it may have 
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
+# Installation
+- Use the installer https://github.com/ivan006/bg-installer (works with shared hosting environment)
+- Register a user after install. To verify user go to db user table and assign a date value to the "email verified at" field
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

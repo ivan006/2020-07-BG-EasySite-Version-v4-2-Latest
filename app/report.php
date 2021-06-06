@@ -312,40 +312,27 @@ class report extends Model
 
             ob_start();
 
-            $key_value_orientation = "Wi_100Per";
-            $itemsection_sharespace = "Wi_100Per";
-            $is_small_toggle = 0;
-            if ($data_item_value["size"] < 150) {
 
-              if ($nestlevel_count < 1) {
-                $itemsection_sharespace = "col-md-6";
-              }
-
-              $key_value_orientation = "InBl_Wi_50Per";
-              $is_small_toggle = 1;
-
-            }
 
             ?>
-            <div style="" class="<?php echo $itemsection_sharespace ?>   BoSi_BoBo">
+            <!-- <div style="" class="   BoSi_BoBo"> -->
               <!-- <table  class="rounded border border-secondary w-100" style="border-collapse: separate;"> -->
-              <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>    d-inline-block" >
-                <div class="p-2">
-                  <b>
-                    <?php echo  preg_replace('/\\.[^.\\s]{3,4}$/', '', $data_item_key); ?>
-                  </b>
-                </div>
+              <div class="PaV_0p5rem">
+                <b>
+                  <?php echo  preg_replace('/\\.[^.\\s]{3,4}$/', '', $data_item_key); ?>
+                </b>
               </div>
-              <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>    d-inline-block">
-                <div class="p-2">
-                  <?php
-                  if ($data_item_value["type"] == "image") {
-                    $modal_id = preg_replace('/[^a-z0-9]/i', '_', $data_item_key);
-                    ?>
-                    <!-- Button to Open the Modal -->
-                    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
-                      Button
-                    </button> -->
+
+              <!-- <div class="PaV_0p5rem   FoFa_Mono FoSi_14px "> -->
+                <?php
+                if ($data_item_value["type"] == "image") {
+                  $modal_id = preg_replace('/[^a-z0-9]/i', '_', $data_item_key);
+                  ?>
+                  <!-- Button to Open the Modal -->
+                  <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
+                    Button
+                  </button> -->
+                  <div class="PaV_0p5rem   FoFa_Mono FoSi_14px ">
                     <a href="#" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
                       <img style="max-width:150px;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
                     </a>
@@ -378,25 +365,24 @@ class report extends Model
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                    <?php
-                  } else {
-                    if ($is_small_toggle == 0) {
-                      echo "<pre style='white-space: pre-wrap;'>";
-                      echo $data_item_value["content"];
-                      echo "</pre>";
-                    } else {
-                      echo $data_item_value["content"];
-                    }
-                  }
+                  <?php
+                } else {
+                  echo '<p class="PaV_0p5rem   FoFa_Mono FoSi_14px WhSp_PrWr">';
+                  // echo "<p class=''>";
+                  echo $data_item_value["content"];
+                  // echo "</p>";
+                  echo '</p>';
 
-
-                  ?>
+                }
 
 
-                </div>
-              </div>
-            </div>
+                ?>
+
+
+              <!-- </div> -->
+            <!-- </div> -->
             <?php
             // $itemsection_sharespace
             $result_part_1_loose_files = $result_part_1_loose_files.ob_get_contents();

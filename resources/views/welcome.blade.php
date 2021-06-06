@@ -129,7 +129,7 @@
 
   <!-- <div class="flex-center position-ref full-height"> -->
     <!-- <div class="flex-center position-ref "> -->
-      <div class=" ">
+      <!-- <div class=" "> -->
 
         @if (Route::has('login'))
         <div class="top-right links">
@@ -144,7 +144,7 @@
           @endauth
         </div>
         @endif
-        <div class="content">
+        <!-- <div class="content"> -->
 
 
 
@@ -234,11 +234,11 @@
               <hr>
               <?php echo $body ?>
             </div>
-          </div>
+          <!-- </div> -->
           <div class="container container-small my-2" style="color: hsl(0,0%,80%);">
             App last updated: <?php echo $last_update[0] ?>
           </div>
-        </div>
+        <!-- </div> -->
 
       </body>
       </html>

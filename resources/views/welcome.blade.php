@@ -126,6 +126,7 @@
     .FoFa_Mono {font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;}
     .FoSi_14px {font-size: 14px;}
     .WhSp_PrWr {white-space: pre-wrap;}
+    .Ov_Au {overflow: auto;}
   </style>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

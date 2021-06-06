@@ -121,6 +121,11 @@
     .InBl_Wi_50Per {width: calc(50% - 3px);}
 
     .BoSi_BoBo {box-sizing: border-box;}
+    .MaTo_0_Imp {margin-top: 0 !important;}
+    .PaV_0p5rem {padding-top: 0.5rem ; padding-bottom: 0.5rem ; }
+    .FoFa_Mono {font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;}
+    .FoSi_14px {font-size: 14px;}
+    .WhSp_PrWr {white-space: pre-wrap;}
   </style>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -203,7 +208,7 @@
                 $sync_toggle = 0;
               }
             ?>
-            <hr>
+            <hr class="MaTo_0_Imp">
 
             <div class="row">
 
@@ -213,9 +218,9 @@
 
                 <div class="col-md-3">
                   <!-- <table  class="rounded border border-secondary w-100" style="border-collapse: separate;"> -->
-                    <table  class="p-2 rounded w-100" style="border-collapse: separate;">
+                    <table  class="PaV_0p5rem rounded w-100" style="border-collapse: separate;">
                       <tr>
-                        <td class="p-2 ">
+                        <td class="PaV_0p5rem ">
                           <b>
                             <a href="/<?php echo $value ?>">
                               <?php echo $key ?>
@@ -231,7 +236,7 @@
                 }
                 ?>
               </div>
-              <hr>
+              <hr class="">
               <?php echo $body ?>
             </div>
           <!-- </div> -->

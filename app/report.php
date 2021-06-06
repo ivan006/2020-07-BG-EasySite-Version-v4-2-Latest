@@ -71,14 +71,18 @@ class report extends Model
 
 
       ob_start();
-      ?>
-      <!-- <div style="text-align: center;"> -->
-      <div style="" class="row">
+      if ("old"=="old") {
+        ?>
+        <!-- <div style="text-align: center;"> -->
+        <div style="" class="row">
 
-        <?php echo $reportdata_html; ?>
-      </div>
+          <?php echo $reportdata_html; ?>
+        </div>
 
-      <?php
+        <?php
+      } else {
+        // code...
+      }
       $reportdata_html = ob_get_contents();
       ob_end_clean();
 
@@ -107,47 +111,51 @@ class report extends Model
 
       if (is_array($data_item_value["content"])) {
         if ($data_item_value['type'] !== "report" AND $data_item_value['type'] !== "section") {
+          if ("old"=="old") {
 
 
-          // reset($data_item_value["content"]);
-          // $data_item_value_0 = key($data_item_value["content"]);
-          // $supersection_sharespace = "InBl_Wi_50Per";
-          // if (isset($data_item_value["content"][$data_item_value_0])) {
-          //   $data_item_value_0_value = $data_item_value["content"][$data_item_value_0];
-          //   // code...
-          //   if (is_array($data_item_value_0_value)) {
-          //     $supersection_sharespace = "Wi_100Per";
-          //   }
-          // }
+              // reset($data_item_value["content"]);
+              // $data_item_value_0 = key($data_item_value["content"]);
+              // $supersection_sharespace = "InBl_Wi_50Per";
+              // if (isset($data_item_value["content"][$data_item_value_0])) {
+              //   $data_item_value_0_value = $data_item_value["content"][$data_item_value_0];
+              //   // code...
+              //   if (is_array($data_item_value_0_value)) {
+              //     $supersection_sharespace = "Wi_100Per";
+              //   }
+              // }
 
-          $supersection_sharespace = "Wi_100Per";
-          $nestlevel_count_new = $nestlevel_count;
-          if ($data_item_value["size"] < 250 AND $nestlevel_count < 1) {
-            $supersection_sharespace = "col-md-6";
-            $nestlevel_count_new = $nestlevel_count+1;
+              $supersection_sharespace = "Wi_100Per";
+              $nestlevel_count_new = $nestlevel_count;
+              if ($data_item_value["size"] < 250 AND $nestlevel_count < 1) {
+                $supersection_sharespace = "col-md-6";
+                $nestlevel_count_new = $nestlevel_count+1;
+              }
+
+
+
+              ob_start();
+              ?>
+              <div style="" class=" <?php echo $supersection_sharespace ?>  ">
+                <h<?php echo $LayerNumber ?> class="" style="margin-top: <?php echo (1/$LayerNumber)*5*16 ?>px;">
+                  <?php echo $data_item_key; ?>
+                </h<?php echo $LayerNumber ?>>
+
+                <!-- <div class="rounded p-2" style="border: solid 1px Gainsboro;"> -->
+                <div class="p-2 row" style="border-top: solid 1px Gainsboro; border-bottom: solid 1px Gainsboro;">
+                  <?php echo $report_object->show_html_helper($data_item_value["content"], $LayerNumber, $nestlevel_count_new) ?>
+                </div>
+
+
+              </div>
+              <?php
+
+              $result_part_2 = $result_part_2.ob_get_contents();
+
+              ob_end_clean();
+          } else {
+            // code...
           }
-
-
-
-          ob_start();
-          ?>
-          <div style="" class=" <?php echo $supersection_sharespace ?>  ">
-            <h<?php echo $LayerNumber ?> class="" style="margin-top: <?php echo (1/$LayerNumber)*5*16 ?>px;">
-              <?php echo $data_item_key; ?>
-            </h<?php echo $LayerNumber ?>>
-
-            <!-- <div class="rounded p-2" style="border: solid 1px Gainsboro;"> -->
-            <div class="p-2 row" style="border-top: solid 1px Gainsboro; border-bottom: solid 1px Gainsboro;">
-              <?php echo $report_object->show_html_helper($data_item_value["content"], $LayerNumber, $nestlevel_count_new) ?>
-            </div>
-
-
-          </div>
-          <?php
-
-          $result_part_2 = $result_part_2.ob_get_contents();
-
-          ob_end_clean();
         }
 
       }
@@ -157,99 +165,103 @@ class report extends Model
     $result_part_1_loose_files = "";
     foreach ($data_items as $data_item_key => $data_item_value) {
       if (!is_array($data_item_value["content"])){
+        if ("old"="old") {
 
-        ob_start();
+            ob_start();
 
-        $key_value_orientation = "Wi_100Per";
-        $itemsection_sharespace = "Wi_100Per";
-        $is_small_toggle = 0;
-        if ($data_item_value["size"] < 150) {
+            $key_value_orientation = "Wi_100Per";
+            $itemsection_sharespace = "Wi_100Per";
+            $is_small_toggle = 0;
+            if ($data_item_value["size"] < 150) {
 
-          if ($nestlevel_count < 1) {
-            $itemsection_sharespace = "col-md-6";
-          }
-
-          $key_value_orientation = "InBl_Wi_50Per";
-          $is_small_toggle = 1;
-
-        }
-
-        ?>
-        <div style="" class="<?php echo $itemsection_sharespace ?>   BoSi_BoBo">
-          <!-- <table  class="rounded border border-secondary w-100" style="border-collapse: separate;"> -->
-          <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>    d-inline-block" >
-            <div class="p-2">
-              <b>
-                <?php echo  preg_replace('/\\.[^.\\s]{3,4}$/', '', $data_item_key); ?>
-              </b>
-            </div>
-          </div>
-          <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>    d-inline-block">
-            <div class="p-2">
-              <?php
-              if ($data_item_value["type"] == "image") {
-                $modal_id = preg_replace('/[^a-z0-9]/i', '_', $data_item_key);
-                ?>
-                <!-- Button to Open the Modal -->
-                <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
-                  Button
-                </button> -->
-                <a href="#" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
-                  <img style="max-width:150px;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
-                </a>
-
-                <!-- The Modal -->
-                <div class="modal" id="<?php echo $modal_id ?>">
-                  <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-
-                      <!-- Modal Header -->
-                      <div class="modal-header">
-                        <!-- <h4 class="modal-title">Modal Heading</h4> -->
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      </div>
-
-                      <!-- Modal body -->
-                      <div class="modal-body" >
-                        <!-- Modal body.. -->
-                        <div class="" style="text-align: center;">
-
-                          <img style="max-width:100%;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
-                        </div>
-                      </div>
-
-                      <!-- Modal footer -->
-                      <!-- <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                      </div> -->
-
-                    </div>
-                  </div>
-                </div>
-
-                <?php
-              } else {
-                if ($is_small_toggle == 0) {
-                  echo "<pre style='white-space: pre-wrap;'>";
-                  echo $data_item_value["content"];
-                  echo "</pre>";
-                } else {
-                  echo $data_item_value["content"];
-                }
+              if ($nestlevel_count < 1) {
+                $itemsection_sharespace = "col-md-6";
               }
 
+              $key_value_orientation = "InBl_Wi_50Per";
+              $is_small_toggle = 1;
 
-              ?>
+            }
+
+            ?>
+            <div style="" class="<?php echo $itemsection_sharespace ?>   BoSi_BoBo">
+              <!-- <table  class="rounded border border-secondary w-100" style="border-collapse: separate;"> -->
+              <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>    d-inline-block" >
+                <div class="p-2">
+                  <b>
+                    <?php echo  preg_replace('/\\.[^.\\s]{3,4}$/', '', $data_item_key); ?>
+                  </b>
+                </div>
+              </div>
+              <div style="vertical-align:top;" class="<?php echo $key_value_orientation ?>    d-inline-block">
+                <div class="p-2">
+                  <?php
+                  if ($data_item_value["type"] == "image") {
+                    $modal_id = preg_replace('/[^a-z0-9]/i', '_', $data_item_key);
+                    ?>
+                    <!-- Button to Open the Modal -->
+                    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
+                      Button
+                    </button> -->
+                    <a href="#" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
+                      <img style="max-width:150px;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
+                    </a>
+
+                    <!-- The Modal -->
+                    <div class="modal" id="<?php echo $modal_id ?>">
+                      <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+
+                          <!-- Modal Header -->
+                          <div class="modal-header">
+                            <!-- <h4 class="modal-title">Modal Heading</h4> -->
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          </div>
+
+                          <!-- Modal body -->
+                          <div class="modal-body" >
+                            <!-- Modal body.. -->
+                            <div class="" style="text-align: center;">
+
+                              <img style="max-width:100%;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
+                            </div>
+                          </div>
+
+                          <!-- Modal footer -->
+                          <!-- <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                          </div> -->
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <?php
+                  } else {
+                    if ($is_small_toggle == 0) {
+                      echo "<pre style='white-space: pre-wrap;'>";
+                      echo $data_item_value["content"];
+                      echo "</pre>";
+                    } else {
+                      echo $data_item_value["content"];
+                    }
+                  }
 
 
+                  ?>
+
+
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <?php
-        // $itemsection_sharespace
-        $result_part_1_loose_files = $result_part_1_loose_files.ob_get_contents();
+            <?php
+            // $itemsection_sharespace
+            $result_part_1_loose_files = $result_part_1_loose_files.ob_get_contents();
 
-        ob_end_clean();
+            ob_end_clean();
+        } else {
+          // code...
+        }
 
       }
     }

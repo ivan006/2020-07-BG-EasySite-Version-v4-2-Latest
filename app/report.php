@@ -441,7 +441,7 @@ class report extends Model
 
           $datatype_report_status = $report_object->datatype_status('_report', $value);
 
-          $datatype_section_status = $report_object->datatype_status('_section_global', $value);
+          $datatype_section_status = $report_object->datatype_status("_global", $value);
 
           if ($datatype_report_status == 0 AND $datatype_section_status == 0) {
             $result["content"][$value] = $report_object->ShowHelper($report_object, $DataLocation);
@@ -511,7 +511,7 @@ class report extends Model
 
     $result_inner = array();
 
-    $breadcrumb_array = array("_section_global");
+    $breadcrumb_array = array("_global");
     $page_folder_path = $report_object->page_folder_path($report_object, $breadcrumb_array);
 
 

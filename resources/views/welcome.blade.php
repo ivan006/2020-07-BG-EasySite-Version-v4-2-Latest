@@ -163,7 +163,6 @@
 
 
 
-            <?php echo $section_global_html ?>
 
             <?php
               if ($title_and_menu["in_sync"] == "No") {
@@ -243,7 +242,9 @@
           <!-- </div> -->
           <div class="container container-small my-2" style="color: hsl(0,0%,80%);">
             App last updated: <?php echo $last_update[0] ?>
+            <?php echo $section_global_html ?>
           </div>
+
         <!-- </div> -->
 
       </body>

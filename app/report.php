@@ -314,19 +314,24 @@ class report extends Model
 
 
 
-            ?>
-            <!-- <div style="" class="   BoSi_BoBo"> -->
-              <!-- <table  class="rounded border border-secondary w-100" style="border-collapse: separate;"> -->
-              <!-- <div style="vertical-align:top;" class="Wi_100Per    d-inline-block" > -->
+              if ($this->util_endsWith($data_item_key, '.html')) {
+
+
+              } else {
+                ?>
+                <!-- <div style="" class="   BoSi_BoBo"> -->
+                <!-- <table  class="rounded border border-secondary w-100" style="border-collapse: separate;"> -->
+                <!-- <div style="vertical-align:top;" class="Wi_100Per    d-inline-block" > -->
                 <div class="PaV_0p5rem">
                   <b>
                     <?php echo  preg_replace('/\\.[^.\\s]{3,4}$/', '', $data_item_key); ?>
                   </b>
                 </div>
-              <!-- </div> -->
-            <!-- <div style="vertical-align:top;" class="Wi_100Per    d-inline-block"> -->
-              <!-- <div class="PaV_0p5rem"> -->
+                <!-- </div> -->
+                <!-- <div style="vertical-align:top;" class="Wi_100Per    d-inline-block"> -->
+                <!-- <div class="PaV_0p5rem"> -->
                 <?php
+              }
                 if ($data_item_value["type"] == "image") {
                   $modal_id = preg_replace('/[^a-z0-9]/i', '_', $data_item_key);
                   ?>
@@ -371,11 +376,20 @@ class report extends Model
 
                   <?php
                 } else {
-                  echo '<p class="PaV_0p5rem   FoFa_Mono FoSi_14px WhSp_PrWr Ov_Au">';
-                  // echo "<p class=''>";
-                  echo $data_item_value["content"];
-                  // echo "</p>";
-                  echo '</p>';
+                  if ($this->util_endsWith($data_item_key, '.html')) {
+
+
+                    echo  '<!-- '.$data_item_key.' file start -->';
+                    echo $data_item_value["content"];
+                    echo  '<!-- '.$data_item_key.' file end -->';
+
+                  } else {
+                    echo '<p class="PaV_0p5rem   FoFa_Mono FoSi_14px WhSp_PrWr Ov_Au">';
+                    // echo "<p class=''>";
+                    echo $data_item_value["content"];
+                    // echo "</p>";
+                    echo '</p>';
+                  }
                 }
 
 
@@ -690,6 +704,12 @@ class report extends Model
     // dd($result);
     return $result;
   }
+
+
+  function util_endsWith($haystack, $needle) {
+    return substr_compare($haystack, $needle, -strlen($needle)) === 0;
+  }
+
 
 
 

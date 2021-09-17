@@ -130,6 +130,8 @@
   </style>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <?php echo $section_global_html ?>
 </head>
 <body class="bg-light">
 
@@ -242,7 +244,6 @@
           <!-- </div> -->
           <div class="container container-small my-2" style="color: hsl(0,0%,80%);">
             App last updated: <?php echo $last_update[0] ?>
-            <?php echo $section_global_html ?>
           </div>
 
         <!-- </div> -->

@@ -81,14 +81,14 @@ class report extends Model
 
         <?php
       } else {
+        // <!-- <div style="text-align: center;"> -->
+        // <!-- <div style="" class="row"> -->
         ?>
-        <!-- <div style="text-align: center;"> -->
-        <!-- <div style="" class="row"> -->
 
           <?php echo $reportdata_html; ?>
-        <!-- </div> -->
 
         <?php
+        // <!-- </div> -->
       }
       $reportdata_html = ob_get_contents();
       ob_end_clean();
@@ -332,74 +332,74 @@ class report extends Model
                 <!-- <div class="PaV_0p5rem"> -->
                 <?php
               }
-                if ($data_item_value["type"] == "image") {
-                  $modal_id = preg_replace('/[^a-z0-9]/i', '_', $data_item_key);
-                  ?>
-                  <!-- Button to Open the Modal -->
-                  <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
-                    Button
-                  </button> -->
-                  <div class="PaV_0p5rem   FoFa_Mono FoSi_14px ">
-                    <a href="#" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
-                      <img style="max-width:150px;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
-                    </a>
+              if ($data_item_value["type"] == "image") {
+                $modal_id = preg_replace('/[^a-z0-9]/i', '_', $data_item_key);
+                ?>
+                <!-- Button to Open the Modal -->
+                <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
+                  Button
+                </button> -->
+                <div class="PaV_0p5rem   FoFa_Mono FoSi_14px ">
+                  <a href="#" data-toggle="modal" data-target="#<?php echo $modal_id ?>">
+                    <img style="max-width:150px;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
+                  </a>
 
-                    <!-- The Modal -->
-                    <div class="modal" id="<?php echo $modal_id ?>">
-                      <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
+                  <!-- The Modal -->
+                  <div class="modal" id="<?php echo $modal_id ?>">
+                    <div class="modal-dialog modal-xl">
+                      <div class="modal-content">
 
-                          <!-- Modal Header -->
-                          <div class="modal-header">
-                            <!-- <h4 class="modal-title">Modal Heading</h4> -->
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                          </div>
-
-                          <!-- Modal body -->
-                          <div class="modal-body" >
-                            <!-- Modal body.. -->
-                            <div class="" style="text-align: center;">
-
-                              <img style="max-width:100%;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
-                            </div>
-                          </div>
-
-                          <!-- Modal footer -->
-                          <!-- <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                          </div> -->
-
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                          <!-- <h4 class="modal-title">Modal Heading</h4> -->
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body" >
+                          <!-- Modal body.. -->
+                          <div class="" style="text-align: center;">
+
+                            <img style="max-width:100%;" src="/images?1=<?php echo $data_item_value["content"] ?>" alt="">
+                          </div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <!-- <div class="modal-footer">
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div> -->
+
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  <?php
+                <?php
+              } else {
+                if ($this->util_endsWith($data_item_key, '.html')) {
+
+
+                  // echo  '<!-- '.$data_item_key.' file start -->';
+                  echo $data_item_value["content"];
+                  // echo  '<!-- '.$data_item_key.' file end -->';
+
                 } else {
-                  if ($this->util_endsWith($data_item_key, '.html')) {
-
-
-                    echo  '<!-- '.$data_item_key.' file start -->';
-                    echo $data_item_value["content"];
-                    echo  '<!-- '.$data_item_key.' file end -->';
-
-                  } else {
-                    echo '<p class="PaV_0p5rem   FoFa_Mono FoSi_14px WhSp_PrWr Ov_Au">';
-                    // echo "<p class=''>";
-                    echo $data_item_value["content"];
-                    // echo "</p>";
-                    echo '</p>';
-                  }
+                  echo '<p class="PaV_0p5rem   FoFa_Mono FoSi_14px WhSp_PrWr Ov_Au">';
+                  // echo "<p class=''>";
+                  echo $data_item_value["content"];
+                  // echo "</p>";
+                  echo '</p>';
                 }
+              }
 
 
-                ?>
+              ?>
 
 
-              <!-- </div> -->
-            <!-- </div> -->
-            <!-- </div> -->
             <?php
+            // <!-- </div> -->
+            // <!-- </div> -->
+            // <!-- </div> -->
             // ""
             $result_part_1_loose_files = $result_part_1_loose_files.ob_get_contents();
 
@@ -412,22 +412,22 @@ class report extends Model
 
 
     ob_start();
+    // <!-- <div class="Di_Fl Fl_Wr"> -->
     ?>
-    <!-- <div class="Di_Fl Fl_Wr"> -->
       <?php echo $result_part_1_loose_files; ?>
-    <!-- </div> -->
     <?php
+    // <!-- </div> -->
     $result_part_1_loose_files = ob_get_contents();
     ob_end_clean();
 
 
 
     ob_start();
+    // <!-- <div class="Di_Fl Fl_Wr"> -->
     ?>
-    <!-- <div class="Di_Fl Fl_Wr"> -->
       <?php echo $result_part_2; ?>
-    <!-- </div> -->
     <?php
+    // <!-- </div> -->
     $result_part_2 = ob_get_contents();
     ob_end_clean();
 
